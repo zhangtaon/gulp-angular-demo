@@ -33,7 +33,7 @@ angular.module("app.login",['ui.router'])
                 }).then(function(res){
                     console.log("post:",res);
                 }, function (res) {
-//                    console.log("post:",res);
+                    console.log("post:",res);
                 });
             };
             $scope.get = function(){
