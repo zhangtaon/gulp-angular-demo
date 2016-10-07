@@ -1,0 +1,12 @@
+{
+  "strict": "global",
+  "globals": {
+    "angular": false
+  },
+  "noempty":true,
+  "nonew": true,
+  "curly": true,
+  "unused": true,
+  "debug": true,
+  "devel": true
+}

@@ -1,0 +1,8 @@
+rev-manifest.json
+!.gitkeep
+node_modules/
+.tmp
+.swp
+dist
+.DS_Store
+.idea

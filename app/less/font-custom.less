@@ -1,0 +1,40 @@
+@font-face {
+	font-family: "font-custom";
+	src: url('../fonts/font-custom.eot');
+	src: url('../fonts/font-custom.eot?#iefix') format('eot'),
+		url('../fonts/font-custom.woff2') format('woff2'),
+		url('../fonts/font-custom.woff') format('woff'),
+		url('../fonts/font-custom.ttf') format('truetype'),
+		url('../fonts/font-custom.svg#font-custom') format('svg');
+}
+
+.jdb-base-pseudo {
+	font-family: "font-custom";
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	// speak: none; // only necessary if not using the private unicode range (firstGlyph option)
+	text-decoration: none;
+	text-transform: none;
+}
+
+.jdb-char(@filename) {
+	@toilet: "\E001";
+	
+	content: @@filename;
+}
+
+.jdb(@filename, @insert: before) {
+	@pseudo-selector: ~":@{insert}";
+
+	&@{pseudo-selector} {
+		&:extend(.jdb-base-pseudo);
+		.jdb-char(@filename);
+	}
+}
+
+.jdb-toilet {
+	.jdb(toilet);
+}
