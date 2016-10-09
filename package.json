@@ -4,10 +4,10 @@
   "description": "angular + gulp + less + browerify + font + uiRouter + mockdata（put、get、post、delete） for spa",
   "main": "app.js",
   "scripts": {
-    "postinstall": "gulp transfer"
+    "postinstall": "gulp transfer && gulp"
   },
   "keywords": [
-    "pms"
+    "spa"
   ],
   "author": "zto",
   "license": "MIT",
