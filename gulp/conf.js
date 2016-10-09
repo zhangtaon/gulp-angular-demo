@@ -104,7 +104,7 @@ exports.compile = function(fileName,newFileName,option){
         .pipe(source(newFileName + suffix))
         .pipe(buffer());
 
-    //添加模板缓存、随机戳
+    //添加模板缓存、哈希
     if(config.rev){
         stream = stream
             .pipe(addStream.obj(prepareTemplates()))
@@ -114,6 +114,16 @@ exports.compile = function(fileName,newFileName,option){
     }
     //输出源文件
     stream = stream.pipe(gulp.dest(outPutDir));
+
+    //哈希但不压缩（注：用于调试）
+    if(config.rev && !config.uglify){
+        stream = stream
+            .pipe(rev.manifest({
+                base: outPutDir,
+                merge: true
+            }))
+            .pipe(gulp.dest(outPutDir));
+    }
 
     //生成压缩版js、map文件
     if(config.uglify){
@@ -147,6 +157,7 @@ exports.compile = function(fileName,newFileName,option){
         }
     }
 
+    //不哈希情况页面刷新
     if(!config.rev){
         stream.pipe(connect.reload());
     }

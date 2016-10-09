@@ -4,8 +4,7 @@
   "description": "angular + gulp + less + browerify + font + uiRouter + mockdata（put、get、post、delete） for spa",
   "main": "app.js",
   "scripts": {
-    "prestart": "gulp transfer",
-    "start": "gulp"
+    "postinstall": "gulp transfer"
   },
   "keywords": [
     "pms"
@@ -57,11 +56,12 @@
     "opn": "^4.0.2",
     "require-dir": "^0.3.0",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "yargs": "^6.0.0"
   },
   "config": {
-     "ghooks": {
-         "pre-commit": "gulp JSHint"
+    "ghooks": {
+      "pre-commit": "gulp JSHint"
     }
   }
 }

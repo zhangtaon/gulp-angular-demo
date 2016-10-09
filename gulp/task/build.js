@@ -13,13 +13,14 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     gulpSequence = require('gulp-sequence'),
     filter = require('gulp-filter'),
-    conf = require('../conf');
-
+    argv = require('yargs').argv,
+    conf = require('../conf'),
+    min = argv.min ? argv.min == 'true' ? true : false : true;
 /**
  * dist: js
  */
 gulp.task("build:js", function(){
-    return conf.compile(["browserify-lib.js","browserify.js"],'app',{uglify:true, rev:true});
+    return conf.compile(["browserify-lib.js","browserify.js"],'app',{uglify:min, rev:true});
 });
 
 /**
@@ -68,7 +69,7 @@ gulp.task('build:html', function () {
                 tpl: '<link rel="stylesheet" href="%s">'
             },
             js: {
-                src: 'app.min.js',
+                src: min ? 'app.min.js' : 'app.js',
                 tpl: '<script type="text/javascript" src="%s"></script>'
             }
         }))
