@@ -20,7 +20,7 @@ angular.module("app.login",['ui.router'])
         "$scope",
         "$http",
         function ($scope, $http) {
-            console.log("login");
-
+            console.log("login",$scope);
+            console.log("login",$http);
         }
     ]);
