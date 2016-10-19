@@ -20,32 +20,7 @@ angular.module("app.login",['ui.router'])
         "$scope",
         "$http",
         function ($scope, $http) {
-            console.log("dd2");
-            $scope.pageName = "login.html111222333";
-            $scope.img = "image/banner.jpg";
-            $scope.post = function(){
-                $http({
-                    url: "/demo1",
-                    method: 'post',
-                    data: {
-                        key: "test"
-                    }
-                }).then(function(res){
-                    console.log("post:",res);
-                }, function (res) {
-                    console.log("post:",res);
-                });
-            };
-            $scope.get = function(){
-                $http({
-                    url: "/demo2",
-                    method: 'get',
-                    params: {zto:10,cc:20,sn:30}
-                }).then(function(res){
-                    console.log("get:",res);
-                }, function (res) {
-                    console.log("get:",res);
-                });
-            };
+            console.log("login");
+
         }
     ]);

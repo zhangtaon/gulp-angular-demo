@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="app" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="app" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="app" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="app" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>借贷宝推广管理系统</title>
+  <meta name="description" content="">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <!-- build:css -->
+  <link rel="stylesheet" href="compile/app.css">
+  <!-- endbuild -->
+
+  <!-- build:js -->
+  <script src="compile/lib.min.js"></script>
+  <script src="compile/app.js"></script>
+  <!-- endbuild -->
+</head>
+<body>
+    <!--[if lt IE 9]>
+      <p class="browserupgrade">
+        请使用
+        <a href="http://www.google.cn/intl/zh-CN/chrome/browser/">谷歌浏览器</a>
+        <a href="http://www.firefox.com.cn/">火狐浏览器</a>
+        <a href="http://windows.microsoft.com/zh-cn/internet-explorer/download-ie">InternetExplorer9.0+</a>
+        <a href="http://se.360.cn/index.html">360安全浏览器</a>
+      </p>
+    <![endif]-->
+    <img ng-src="image/logo.png">
+    <a ui-sref="login">loginzto呜呜</a>
+    <a ui-sref="index">index</a>
+    <a ng-click="go()">go index</a>
+    <!--<div ng-include="'modules/header/header.html'"></div>-->
+    <div ui-view></div>
+    <!--<div ng-include="'modules/footer/footer.html'"></div>-->
+</body>
+</html>

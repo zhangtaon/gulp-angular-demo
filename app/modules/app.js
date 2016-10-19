@@ -2,14 +2,13 @@
 angular.module("app",[
     "ui.router",
     "app.login",
-    "app.index",
-])
-    .config([
+    "app.main",
+]).config([
         "$stateProvider",
         "$locationProvider",
         "$urlRouterProvider",
         function($stateProvider, $locationProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise("/index");
+        $urlRouterProvider.otherwise("/main");
         $locationProvider.html5Mode(false);
 
         }

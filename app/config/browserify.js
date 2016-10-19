@@ -1,4 +1,3 @@
-require("../modules/main");
+require("../modules/app");
+require("../modules/main/main");
 require("../modules/login/login");
-require("../modules/index/index");
-

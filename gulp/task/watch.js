@@ -35,7 +35,7 @@ gulp.task('watch', function () {
  * html reload
  */
 gulp.task('html', function () {
-    gulp.src(conf.path.src + '/*.html')
+    gulp.src(conf.path.src + '/**/*.html')
         .pipe(connect.reload());
 });
 

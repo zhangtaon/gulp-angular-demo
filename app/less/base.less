@@ -1,5 +1,24 @@
-.wrapper {
-
+html,
+body {
+  height: 100%;
+}
+body {
+  background: #444 url(../image/debut_dark.png) repeat;
+  color: #666;
+  text-size-adjust: 100%;
+}
+html,
+body,
+div,
+h1,
+h2,
+p,
+ol,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 a:visited,
 a:hover,
@@ -7,6 +26,7 @@ a:active,
 a {
   text-decoration: none;
 }
+
 /*a标签包裹img标签*/
 .link-img {
   display: block;
@@ -20,3 +40,26 @@ a {
 .link-img img {
   width: 100%;
 }
+
+header {
+  position: fixed;
+  padding: 20px 0;
+  width: 100%;
+  background-color: #fff;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e9e9e9;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+footer {
+  position: relative;
+  padding: 20px 0;
+  background-color: #000;
+}
+.content {
+  position: relative;
+  margin-top: 80px;
+  padding-top: 10px;
+}
+
