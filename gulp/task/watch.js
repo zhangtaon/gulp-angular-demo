@@ -28,7 +28,8 @@ gulp.task('watch', function () {
     gulp.watch(conf.path.src + conf.path.config + 'browserify-lib.js', ['browserify-lib']);
 
     //watch business module
-    gulp.watch(conf.path.src + '/modules/**/*.js', ['browserify']);
+//    gulp.watch(conf.path.src + '/modules/**/*.js', ['browserify']);
+    gulp.watch(conf.path.src + '/src/**/*.js', ['browserify']);
 });
 
 /**

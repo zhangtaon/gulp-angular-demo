@@ -1,0 +1,80 @@
+.aside {
+  position: fixed;
+  overflow-y: scroll;
+  height: 80%;
+  left: 0;
+  z-index: 0;
+  ul {
+    display: block;
+    width: 100%;
+    list-style: none;
+    li{
+      width: 100%;
+      display: block;
+      &:first-child a {
+        border-top: 0;
+      }
+      a {
+        color: #aaa;
+        font-weight: 700;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-transition: background .3s ease;
+        -moz-transition: background .3s ease;
+        transition: background .3s ease;
+        text-shadow: 0 -1px rgba(0,0,0,.5);
+        border-bottom: 1px solid rgba(0,0,0,.2);
+        border-top: 1px solid rgba(255,255,255,.1);
+        display: block;
+        padding: .6em 2em;
+        width: 100%;
+        &:hover {
+          background: rgba(255,255,255,.1);
+        }
+      }
+      ul {
+        background-color: gray;
+      }
+      li {
+        a:hover {
+          background: rgba(255,255,255,.1);
+        }
+        a {
+          background: rgba(0,0,0,.5)
+        }
+      }
+      &.active {
+        a {
+          color: #fff;
+        }
+        .active {
+          a {
+            color: #fff;
+            background: rgba(0,0,0,.2);
+          }
+        }
+        li {
+          a {
+            color: #aaa;
+          }
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 2000px) {
+  .aside {
+    width: 20%;
+  }
+}
+@media screen and (max-width: 1700px) {
+  .aside {
+    width: 22%;
+  }
+}
+@media screen and (max-width: 1400px) {
+  .aside {
+    width: 26%;
+  }
+}
