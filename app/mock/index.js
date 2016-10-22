@@ -17,4 +17,5 @@ module.exports = function (rest, mockDir) {
 
     conf.routing("/demo1",'demo1.json');
     conf.routing("/demo2",'demo2.json');
+    conf.routing("/login",'login.json');
 };

@@ -15,7 +15,16 @@ angular.module("app.test", ['ui.router'])
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("testCtrl", ["$scope",function ($scope) {
-        console.log('testCtrl');
+    .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
+        console.log("testCtrl token:",sessionStorage.getItem("token"));
+        $http({
+            url: "/demo1",
+            method: 'get',
+            params: {zto:10,cc:20,sn:30}
+        }).then(function (res) {
+            //                    console.log("post:", res);
+        }, function (res) {
+            console.log("post:", res);
+        });
     }]
 );

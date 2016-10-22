@@ -21,5 +21,6 @@ angular.module("app.main", [
         }
     ])
     .controller("mainCtrl", ["$scope","$http",function ($scope,$http) {
+        console.log("main token:",sessionStorage.getItem("token"));
         $scope.asideOption = JSON.parse(sessionStorage.getItem("asideOption"));
     }]);

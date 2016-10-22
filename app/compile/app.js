@@ -12,14 +12,57 @@ angular.module("app",[
     "app.login",
     "app.main",
 ]).config([
+        "$httpProvider",
         "$stateProvider",
         "$locationProvider",
         "$urlRouterProvider",
-        function($stateProvider, $locationProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise("/login");
-        $locationProvider.html5Mode(false);
+        function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
+            $urlRouterProvider.otherwise("/login");
+            $locationProvider.html5Mode(false);
 
-
+            var interceptror = function($q, $rootScope){
+              return {
+                  request: function(config){
+                      config.headers.token = sessionStorage.getItem("token");
+                      return config;
+                  },
+                  response: function(resp){
+                    if(resp.config.url == '/login') {
+                        sessionStorage.setItem("token",resp.config.headers.token || resp.data.token);
+                    }
+                    return resp;
+                  },
+                  responseError: function(rejection){
+                      //错误处理
+                      switch(rejection.status){
+                          case 401:
+                              if(rejection.config.url !== '/login'){
+                                  $rootScope.$broadcast('auth:loginRequired');
+                              }
+                              console.log(401);
+                              break;
+                          case 403:
+                              $rootScope.$broadcast('auth:forbidden');
+                              console.log(403);
+                              break;
+                          case 404:
+                              $rootScope.$broadcast('url:notFound');
+                              console.log(404);
+                              break;
+                          case 405:
+                              $rootScope.$broadcast('method:notAllowed');
+                              console.log(405);
+                              break;
+                          case 500:
+                              $rootScope.$broadcast('server:error');
+                              console.log(500);
+                              break;
+                      }
+                      return $q.reject(rejection);
+                  }
+              };
+            };
+            $httpProvider.interceptors.push(interceptror);
         }
     ]);
 },{}],3:[function(require,module,exports){
@@ -83,12 +126,12 @@ angular.module("aside", [])
     });
 },{}],4:[function(require,module,exports){
 "use strict";
-angular.module("app.login",['ui.router'])
+angular.module("app.login", ['ui.router'])
     .config([
         "$stateProvider",
         "$locationProvider",
         "$urlRouterProvider",
-        function($stateProvider, $locationProvider) {
+        function ($stateProvider, $locationProvider) {
             $stateProvider
                 .state('login', {
                     url: "/login",
@@ -105,12 +148,26 @@ angular.module("app.login",['ui.router'])
         "$http",
         "$rootScope",
         "$state",
-        function ($scope, $http,$rootScope,$state) {
-            $scope.login = function(){
-                $http.get("role/role1.json").success(function(res){
-                    sessionStorage.setItem("asideOption",JSON.stringify(res));
-                    $state.go("main");
+        function ($scope, $http, $rootScope, $state) {
+            $scope.login = function () {
+                $http.post("/login").success(function (res) {
+                    console.log("login token:",sessionStorage.getItem("token"));
+                    $http.get("role/role1.json").success(function (res) {
+                        sessionStorage.setItem("asideOption", JSON.stringify(res));
+                        $state.go("main");
+                    });
                 });
+                /*$http({
+                    url: "/login",
+                    method: 'post',
+                    data: {
+                        key: "test"
+                    }
+                }).then(function (res) {
+//                    console.log("post:", res);
+                }, function (res) {
+                    console.log("post:", res);
+                });*/
             };
         }
     ]);
@@ -138,6 +195,7 @@ angular.module("app.main", [
         }
     ])
     .controller("mainCtrl", ["$scope","$http",function ($scope,$http) {
+        console.log("main token:",sessionStorage.getItem("token"));
         $scope.asideOption = JSON.parse(sessionStorage.getItem("asideOption"));
     }]);
 
@@ -159,8 +217,17 @@ angular.module("app.test", ['ui.router'])
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("testCtrl", ["$scope",function ($scope) {
-        console.log('testCtrl');
+    .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
+        console.log("testCtrl token:",sessionStorage.getItem("token"));
+        $http({
+            url: "/demo1",
+            method: 'get',
+            params: {zto:10,cc:20,sn:30}
+        }).then(function (res) {
+            //                    console.log("post:", res);
+        }, function (res) {
+            console.log("post:", res);
+        });
     }]
 );
 
