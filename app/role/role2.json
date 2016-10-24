@@ -1,11 +1,6 @@
 {
     "datas": [
         {
-            "ref":"main.test",
-            "title":"test",
-            "items": []
-        },
-        {
             "ref":"main.Home",
             "title":"Home",
             "items": []

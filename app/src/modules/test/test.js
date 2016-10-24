@@ -16,9 +16,8 @@ angular.module("app.test", ['ui.router'])
         }
     ])
     .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
-        console.log("testCtrl token:",sessionStorage.getItem("token"));
         $http({
-            url: "/demo1",
+            url: "/demo2",
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {

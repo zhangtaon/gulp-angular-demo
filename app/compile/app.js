@@ -1,70 +1,79 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("../src/app");
+require("../src/service/interceptor");
 require("../src/directive/aside/aside");
 require("../src/modules/main/main");
 require("../src/modules/login/login");
 require("../src/modules/test/test");
 
-},{"../src/app":2,"../src/directive/aside/aside":3,"../src/modules/login/login":4,"../src/modules/main/main":5,"../src/modules/test/test":6}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/aside/aside":3,"../src/modules/login/login":4,"../src/modules/main/main":5,"../src/modules/test/test":6,"../src/service/interceptor":7}],2:[function(require,module,exports){
 "use strict";
-angular.module("app",[
+angular.module("app", [
     "ui.router",
     "app.login",
     "app.main",
 ]).config([
-        "$httpProvider",
-        "$stateProvider",
-        "$locationProvider",
-        "$urlRouterProvider",
-        function($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise("/login");
-            $locationProvider.html5Mode(false);
+    "$httpProvider",
+    "$stateProvider",
+    "$locationProvider",
+    "$urlRouterProvider",
+    function ($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise("/login");
+        $locationProvider.html5Mode(false);
+        $httpProvider.interceptors.push("Interceptor");
 
-            var interceptror = function($q, $rootScope){
-              return {
-                  request: function(config){
-                      config.headers.token = sessionStorage.getItem("token");
-                      return config;
-                  },
-                  response: function(resp){
-                    if(resp.config.url == '/login') {
-                        sessionStorage.setItem("token",resp.config.headers.token || resp.data.token);
+        /*
+        $http({
+            url: "/login",
+            method: 'post',
+            data: {
+                key: "test"
+            }
+        }).then(function (res) {
+            console.log("post:", res);
+        }, function (res) {
+            console.log("post:", res);
+        });
+        */
+    }])
+    .run(["$rootScope","$state","_aside",function($rootScope,$state,_aside){
+
+        $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
+
+            if(toState.name =='login')return;// 如果是进入登录界面则允许
+
+            // 如果用户不存在
+            if(!sessionStorage.getItem("userinfo") || !sessionStorage.getItem("token")){
+                event.preventDefault();
+                $state.go("login",{from:fromState.name,w:'notLogin'});
+            }
+
+            //略过main
+            if(toState.name === "main")return;
+
+            //验证路由的有效性
+            _aside.data && _aside.data.then(function(res){
+                var hasAuth;
+                for(var i= 0,item;item = res.data.datas[i];i++){
+                    if(toState.name === item.ref){
+                        hasAuth = true;
+                        break;
                     }
-                    return resp;
-                  },
-                  responseError: function(rejection){
-                      //错误处理
-                      switch(rejection.status){
-                          case 401:
-                              if(rejection.config.url !== '/login'){
-                                  $rootScope.$broadcast('auth:loginRequired');
-                              }
-                              console.log(401);
-                              break;
-                          case 403:
-                              $rootScope.$broadcast('auth:forbidden');
-                              console.log(403);
-                              break;
-                          case 404:
-                              $rootScope.$broadcast('url:notFound');
-                              console.log(404);
-                              break;
-                          case 405:
-                              $rootScope.$broadcast('method:notAllowed');
-                              console.log(405);
-                              break;
-                          case 500:
-                              $rootScope.$broadcast('server:error');
-                              console.log(500);
-                              break;
-                      }
-                      return $q.reject(rejection);
-                  }
-              };
-            };
-            $httpProvider.interceptors.push(interceptror);
-        }
-    ]);
+                    for(var j= 0,_item;_item = item.items[j];j++){
+                        if(toState.name === _item.ref){
+                            hasAuth = true;
+                            break;
+                        }
+                    }
+                    if(hasAuth)break;
+                }
+                if(!hasAuth){
+                    event.preventDefault();
+                    $state.go("main");
+                }
+            })
+        });
+    }]);
 },{}],3:[function(require,module,exports){
 /**
  * 侧边栏指令
@@ -102,7 +111,7 @@ angular.module("aside", [])
             },
             replace: true,
             templateUrl: '/src/directive/aside/aside.html',
-            controller: function ($scope,$http) {
+            controller: function ($scope, $http) {
                 $scope.menus = $scope.option.datas;
                 $scope.getFirstClass = function (title) {
                     return {active: title == $scope.firstActive};
@@ -123,7 +132,22 @@ angular.module("aside", [])
                 };
             }
         }
-    });
+    })
+    .factory("_aside", ["$http", "$log", function ($http, $log) {
+        try {
+            var userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+        } catch (e) {
+            $log.error("$log:", e);
+        }
+
+        return {
+            /**
+             * 获取侧边栏数据
+             */
+            data: userinfo ? $http.get("role/" + userinfo.role + ".json") : null
+        };
+    }])
+;
 },{}],4:[function(require,module,exports){
 "use strict";
 angular.module("app.login", ['ui.router'])
@@ -151,23 +175,10 @@ angular.module("app.login", ['ui.router'])
         function ($scope, $http, $rootScope, $state) {
             $scope.login = function () {
                 $http.post("/login").success(function (res) {
-                    console.log("login token:",sessionStorage.getItem("token"));
-                    $http.get("role/role1.json").success(function (res) {
-                        sessionStorage.setItem("asideOption", JSON.stringify(res));
-                        $state.go("main");
-                    });
+                    sessionStorage.setItem("userinfo", JSON.stringify(res.data));
+                    $rootScope.userinfo = res.data;
+                    $state.go("main");
                 });
-                /*$http({
-                    url: "/login",
-                    method: 'post',
-                    data: {
-                        key: "test"
-                    }
-                }).then(function (res) {
-//                    console.log("post:", res);
-                }, function (res) {
-                    console.log("post:", res);
-                });*/
             };
         }
     ]);
@@ -188,15 +199,19 @@ angular.module("app.main", [
                 .state('main', {
                     url: "/main",
                     controller: 'mainCtrl',
-                    templateUrl: 'modules/main/main.html'
+                    templateUrl: 'src/modules/main/main.html',
+                    resolve: {
+                        menus: ["_aside",function(_aside){
+                            return _aside.data;
+                        }]
+                    }
                 });
             // Without server side support html5 must be disabled.
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("mainCtrl", ["$scope","$http",function ($scope,$http) {
-        console.log("main token:",sessionStorage.getItem("token"));
-        $scope.asideOption = JSON.parse(sessionStorage.getItem("asideOption"));
+    .controller("mainCtrl", ["$scope","$http","menus",function ($scope,$http,menus) {
+        $scope.asideOption = menus.data;
     }]);
 
 },{}],6:[function(require,module,exports){
@@ -218,9 +233,8 @@ angular.module("app.test", ['ui.router'])
         }
     ])
     .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
-        console.log("testCtrl token:",sessionStorage.getItem("token"));
         $http({
-            url: "/demo1",
+            url: "/demo2",
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
@@ -231,4 +245,52 @@ angular.module("app.test", ['ui.router'])
     }]
 );
 
+},{}],7:[function(require,module,exports){
+"use strict";
+/**
+ * http拦截器
+ * 注：封装登录token
+ */
+angular.module("app")
+    .factory('Interceptor', ["$q","$rootScope","$log","$location",function ($q,$rootScope,$log,$location) {
+        return {
+            request: function (config) {
+                config.headers.token = sessionStorage.getItem("token");
+                return config;
+            },
+            response: function (resp) {
+                if (resp.config.url == '/login') {
+                    sessionStorage.setItem("token", resp.config.headers.token || resp.data.token);
+                }
+                return resp;
+            },
+            responseError: function (rejection) {
+                //错误处理
+                switch (rejection.status) {
+                    case 401:
+                        if (rejection.config.url !== '/login') {
+                            sessionStorage.setItem("token", null);
+                            sessionStorage.setItem("userinfo", null);
+                            $log.log("auth:loginRequired");
+                        }
+                        $location.url("/login");
+                        break;
+                    case 403:
+                        $log.warn("auth:forbidden");
+                        break;
+                    case 404:
+                        $log.warn("url:notFound");
+                        break;
+                    case 405:
+                        $log.warn("method:notAllowed");
+                        break;
+                    case 500:
+                        $log.error("server:error");
+                        break;
+                }
+                return $q.reject(rejection);
+            }
+        };
+    }
+]);
 },{}]},{},[1]);

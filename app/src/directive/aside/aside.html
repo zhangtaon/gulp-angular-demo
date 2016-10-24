@@ -1,7 +1,8 @@
 <div role="navigation" class="aside closed" aria-hidden="false">
     <ul>
         <li ng-class="getFirstClass(menu.title)" ng-repeat="menu in menus" ng-click="select(menu,$event)">
-            <a ui-sref="{{menu.ref}}">{{menu.title}}</a>
+            <a ui-sref="{{menu.ref}}" ng-if="menu.ref">{{menu.title}}</a>
+            <a ng-if="!menu.ref">{{menu.title}}</a>
             <ul>
                 <li ng-class="getSecondClass(item.title)" ng-repeat="item in menu.items">
                     <a ui-sref="{{item.ref}}" data-title="{{item.title}}" data-level="2">{{item.title}}</a>

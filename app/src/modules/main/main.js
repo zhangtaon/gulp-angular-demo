@@ -14,13 +14,17 @@ angular.module("app.main", [
                 .state('main', {
                     url: "/main",
                     controller: 'mainCtrl',
-                    templateUrl: 'modules/main/main.html'
+                    templateUrl: 'src/modules/main/main.html',
+                    resolve: {
+                        menus: ["_aside",function(_aside){
+                            return _aside.data;
+                        }]
+                    }
                 });
             // Without server side support html5 must be disabled.
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("mainCtrl", ["$scope","$http",function ($scope,$http) {
-        console.log("main token:",sessionStorage.getItem("token"));
-        $scope.asideOption = JSON.parse(sessionStorage.getItem("asideOption"));
+    .controller("mainCtrl", ["$scope","$http","menus",function ($scope,$http,menus) {
+        $scope.asideOption = menus.data;
     }]);

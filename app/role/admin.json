@@ -1,10 +1,10 @@
 {
     "datas": [
         {
-            "ref":"main.test",
+            "ref":"",
             "title":"test",
             "items": [
-                {"ref":"main.test1","title":"test1"}
+                {"ref":"main.test","title":"test1"}
             ]
         },
         {

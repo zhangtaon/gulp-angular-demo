@@ -5,7 +5,11 @@
         "returnUserMessage": "ok"
     },
     "data": {
-
+        "username": "zto",
+        "age": "29",
+        "address": "河北省",
+        "mobile": "13811596643",
+        "role": "role2"
     },
     "token": "zto123"
 }

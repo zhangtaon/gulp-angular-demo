@@ -24,23 +24,10 @@ angular.module("app.login", ['ui.router'])
         function ($scope, $http, $rootScope, $state) {
             $scope.login = function () {
                 $http.post("/login").success(function (res) {
-                    console.log("login token:",sessionStorage.getItem("token"));
-                    $http.get("role/role1.json").success(function (res) {
-                        sessionStorage.setItem("asideOption", JSON.stringify(res));
-                        $state.go("main");
-                    });
+                    sessionStorage.setItem("userinfo", JSON.stringify(res.data));
+                    $rootScope.userinfo = res.data;
+                    $state.go("main");
                 });
-                /*$http({
-                    url: "/login",
-                    method: 'post',
-                    data: {
-                        key: "test"
-                    }
-                }).then(function (res) {
-//                    console.log("post:", res);
-                }, function (res) {
-                    console.log("post:", res);
-                });*/
             };
         }
     ]);
