@@ -30,17 +30,26 @@ angular.module("app", [
     .run(["$rootScope","$state","_aside",function($rootScope,$state,_aside){
 
         $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
+            console.log("toState.name:",toState.name);
+            var token = sessionStorage.getItem("token");
 
-            if(toState.name =='login')return;// 如果是进入登录界面则允许
+            //登录页且token有效
+            if(toState.name =='login' && token){
+                $state.go("main");
+//                return;
+            }
 
-            // 如果用户不存在
-            if(!sessionStorage.getItem("userinfo") || !sessionStorage.getItem("token")){
+            // 无效
+            if(!token){
                 event.preventDefault();
                 $state.go("login",{from:fromState.name,w:'notLogin'});
+                return;
             }
 
             //略过main
-            if(toState.name === "main")return;
+            if(toState.name === "main"){
+                return;
+            }
 
             //验证路由的有效性
             _aside.data && _aside.data.then(function(res){
@@ -59,9 +68,11 @@ angular.module("app", [
                     if(hasAuth)break;
                 }
                 if(!hasAuth){
+                    console.log("event",event);
                     event.preventDefault();
                     $state.go("main");
                 }
             })
+
         });
     }]);

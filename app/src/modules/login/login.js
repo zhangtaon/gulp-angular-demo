@@ -18,16 +18,29 @@ angular.module("app.login", ['ui.router'])
     ])
     .controller("loginCtrl", [
         "$scope",
-        "$http",
         "$rootScope",
-        "$state",
-        function ($scope, $http, $rootScope, $state) {
+        "_loginService",
+        function ($scope, $rootScope, _loginService) {
             $scope.login = function () {
-                $http.post("/login").success(function (res) {
-                    sessionStorage.setItem("userinfo", JSON.stringify(res.data));
-                    $rootScope.userinfo = res.data;
-                    $state.go("main");
-                });
+                _loginService.login();
             };
         }
-    ]);
+    ])
+    .factory("_loginService",[
+        "$http",
+        "_aside",
+        "$state",
+        "$rootScope",
+        function($http,_aside,$state,$rootScope){
+            return {
+                login: function(){
+                    $http.post("/login").success(function (res) {
+                        sessionStorage.setItem("userinfo", JSON.stringify(res.data));
+                        $rootScope.userinfo = res.data;
+                        _aside.init(res.data.role);
+                        $state.go("main");
+                    });
+                }
+            }
+        }])
+;

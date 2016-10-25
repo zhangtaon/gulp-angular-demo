@@ -34,7 +34,7 @@ angular.module("aside", [])
             },
             replace: true,
             templateUrl: '/src/directive/aside/aside.html',
-            controller: function ($scope, $http) {
+            controller: function ($scope) {
                 $scope.menus = $scope.option.datas;
                 $scope.getFirstClass = function (title) {
                     return {active: title == $scope.firstActive};
@@ -59,15 +59,23 @@ angular.module("aside", [])
     .factory("_aside", ["$http", "$log", function ($http, $log) {
         try {
             var userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+            $log.log("userinfo:",userinfo);
         } catch (e) {
             $log.error("$log:", e);
         }
-
-        return {
+//        var data = userinfo ? $http.get("role/" + userinfo.role + ".json") : null;
+        var aside = {
+            init: function(role){
+                this.data = $http.get("role/" + role + ".json");
+            },
             /**
-             * 获取侧边栏数据
+             * 侧边栏数据
              */
-            data: userinfo ? $http.get("role/" + userinfo.role + ".json") : null
+            data: null
         };
+        if(userinfo){
+            aside.init(userinfo.role);
+        }
+        return aside;
     }])
 ;
