@@ -28,5 +28,6 @@ angular.module("app.main", [
         }
     ])
     .controller("mainCtrl", ["$scope","$http","menus",function ($scope,$http,menus) {
-        $scope.asideOption = menus.data
+        $scope.asideOption = menus.data;
+        var zto;
     }]);
