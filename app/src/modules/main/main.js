@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 angular.module("app.main", [
         'ui.router',
         'aside',
@@ -28,6 +28,8 @@ angular.module("app.main", [
         }
     ])
     .controller("mainCtrl", ["$scope","$http","menus",function ($scope,$http,menus) {
+
+        //初始化侧边栏
         $scope.asideOption = menus.data;
-        var zto;
+
     }]);

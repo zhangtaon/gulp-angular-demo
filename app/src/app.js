@@ -13,39 +13,42 @@ angular.module("app", [
         $locationProvider.html5Mode(false);
         $httpProvider.interceptors.push("Interceptor");
     }])
-    .run(["$rootScope","$state","_aside", "$log", function($rootScope,$state,_aside,$log){
+    .run([
+        "$rootScope",
+        "$state",
+        "_aside",
+        function($rootScope,$state,_aside){
 
-        $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
-            var token = sessionStorage.getItem("token");
+            $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState){
+                var token = sessionStorage.getItem("token");
 
-            //token有效 && 登录页
-            if(toState.name =='login' && token){
-                $log.log("有效");
-                $state.go("main");
-//                return;
-            }
-
-            // token无效
-            if(!token && toState.name !='login'){
-                $log.log("无效");
-                event.preventDefault();
-                $state.go("login",{from:fromState.name,w:'notLogin'});
-                return;
-            }
-
-            //略过main
-            if(toState.name === "main"){
-                return;
-            }
-
-            //验证路由的有效性
-            _aside.hasRole(toState.name).then(function(auth){
-                $log.log("auth:",auth);
-                if(!auth){
+                //token有效 如果是请求登录页就返回main页面
+                if(toState.name =='login' && token){
                     event.preventDefault();
                     $state.go("main");
+                    return;
                 }
-            });
 
-        });
-    }]);
+                // token无效 如果访问内部页就返回到登录页
+                if(!token && toState.name !='login'){
+                    event.preventDefault();
+                    $state.go("login",{from:fromState.name,w:'notLogin'});
+                    return;
+                }
+
+                //略过main 注：main不在验证路由有效性的范围
+                if(toState.name === "main"){
+                    return;
+                }
+
+                //除以上情况外，所有路由都要验证有效性
+                _aside.hasRole(toState.name).then(function(auth){
+                    if(!auth){
+                        event.preventDefault();
+                        $state.go("main");
+                    }
+                });
+
+            });
+        }
+    ]);

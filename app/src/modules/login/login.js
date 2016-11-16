@@ -41,6 +41,6 @@ angular.module("app.login", ['ui.router'])
                         $state.go("main");
                     });
                 }
-            }
+            };
         }])
 ;

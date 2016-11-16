@@ -23,42 +23,45 @@ angular.module("app", [
         $locationProvider.html5Mode(false);
         $httpProvider.interceptors.push("Interceptor");
     }])
-    .run(["$rootScope","$state","_aside", "$log", function($rootScope,$state,_aside,$log){
+    .run([
+        "$rootScope",
+        "$state",
+        "_aside",
+        function($rootScope,$state,_aside){
 
-        $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
-            var token = sessionStorage.getItem("token");
+            $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState){
+                var token = sessionStorage.getItem("token");
 
-            //token有效 && 登录页
-            if(toState.name =='login' && token){
-                $log.log("有效");
-                $state.go("main");
-//                return;
-            }
-
-            // token无效
-            if(!token && toState.name !='login'){
-                $log.log("无效");
-                event.preventDefault();
-                $state.go("login",{from:fromState.name,w:'notLogin'});
-                return;
-            }
-
-            //略过main
-            if(toState.name === "main"){
-                return;
-            }
-
-            //验证路由的有效性
-            _aside.hasRole(toState.name).then(function(auth){
-                $log.log("auth:",auth);
-                if(!auth){
+                //token有效 如果是请求登录页就返回main页面
+                if(toState.name =='login' && token){
                     event.preventDefault();
                     $state.go("main");
+                    return;
                 }
-            });
 
-        });
-    }]);
+                // token无效 如果访问内部页就返回到登录页
+                if(!token && toState.name !='login'){
+                    event.preventDefault();
+                    $state.go("login",{from:fromState.name,w:'notLogin'});
+                    return;
+                }
+
+                //略过main 注：main不在验证路由有效性的范围
+                if(toState.name === "main"){
+                    return;
+                }
+
+                //除以上情况外，所有路由都要验证有效性
+                _aside.hasRole(toState.name).then(function(auth){
+                    if(!auth){
+                        event.preventDefault();
+                        $state.go("main");
+                    }
+                });
+
+            });
+        }
+    ]);
 },{}],3:[function(require,module,exports){
 /**
  * 侧边栏指令
@@ -102,49 +105,57 @@ angular.module("aside", [])
             controller: function ($scope) {
                 $scope.menus = $scope.option.datas;
             }
-        }
+        };
     })
-    .factory("_aside", ["$http", "$log","$q", function ($http, $log, $q) {
-        try {
-            var userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-        } catch (e) {
-            $log.error("$log:", e);
-        }
+    .factory("_aside", [
+        "$http",
+        "$log",
+        "$q",
+        function ($http, $log, $q) {
+            var userinfo;
+            try {
+                userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+            } catch (e) {
+                $log.error("$log:", e);
+            }
 
-        /**
-         * 侧边栏数据对象
-         */
-        var aside = {
-            init: function(role){
-                this.data = $http.get("role/" + role + ".json");
-            },
-            data: null,
-            hasRole: function(stateName){
-                var defer = $q.defer(),hasAuth;
-                this.data && this.data.then(function(res){
-                    for(var i= 0,item;item = res.data.datas[i];i++){
-                        if(stateName === item.ref){
-                            hasAuth = true;
-                            break;
-                        }
-                        for(var j= 0,_item;_item = item.items[j];j++){
-                            if(stateName === _item.ref){
+            /**
+             * 侧边栏数据对象
+             */
+            var aside = {
+                init: function(role){
+                    this.data = $http.get("role/" + role + ".json");
+                },
+                data: null,
+                hasRole: function(stateName){
+                    var defer = $q.defer(),hasAuth;
+                    this.data && this.data.then(function(res){
+                        for(var i= 0,item;(item = res.data.datas[i]);i++){
+                            if(stateName === item.ref){
                                 hasAuth = true;
                                 break;
                             }
+                            for(var j= 0,_item;(_item = item.items[j]);j++){
+                                if(stateName === _item.ref){
+                                    hasAuth = true;
+                                    break;
+                                }
+                            }
+                            if(hasAuth){
+                                break;
+                            }
                         }
-                        if(hasAuth)break;
-                    }
-                    defer.resolve(hasAuth);
-                });
-                return defer.promise;
+                        defer.resolve(hasAuth);
+                    });
+                    return defer.promise;
+                }
+            };
+            if(userinfo){
+                aside.init(userinfo.role);
             }
-        };
-        if(userinfo){
-            aside.init(userinfo.role);
+            return aside;
         }
-        return aside;
-    }])
+    ])
 ;
 },{}],4:[function(require,module,exports){
 "use strict";
@@ -152,7 +163,7 @@ angular.module("app.about", ['ui.router'])
     .config([
         "$stateProvider",
         "$locationProvider",
-        "$urlRouterProvider",function ($stateProvider, $locationProvider, $urlRouterProvider) {
+        "$urlRouterProvider",function ($stateProvider, $locationProvider) {
             $stateProvider
                 .state('main.about', {
                     url: "/about",
@@ -170,7 +181,7 @@ angular.module("app.about", ['ui.router'])
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
-            //                    console.log("post:", res);
+            console.log("post:", res);
         }, function (res) {
             console.log("post:", res);
         });
@@ -221,7 +232,7 @@ angular.module("app.login", ['ui.router'])
                         $state.go("main");
                     });
                 }
-            }
+            };
         }])
 ;
 },{}],6:[function(require,module,exports){
@@ -255,7 +266,10 @@ angular.module("app.main", [
         }
     ])
     .controller("mainCtrl", ["$scope","$http","menus",function ($scope,$http,menus) {
+
+        //初始化侧边栏
         $scope.asideOption = menus.data;
+
     }]);
 
 },{}],7:[function(require,module,exports){
@@ -264,7 +278,7 @@ angular.module("app.test", ['ui.router'])
     .config([
         "$stateProvider",
         "$locationProvider",
-        "$urlRouterProvider",function ($stateProvider, $locationProvider, $urlRouterProvider) {
+        "$urlRouterProvider",function ($stateProvider, $locationProvider) {
             $stateProvider
                 .state('main.test', {
                     url: "/test",
@@ -282,7 +296,7 @@ angular.module("app.test", ['ui.router'])
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
-            //                    console.log("post:", res);
+            console.log("get:", res);
         }, function (res) {
             console.log("post:", res);
         });
@@ -296,45 +310,50 @@ angular.module("app.test", ['ui.router'])
  * 注：封装登录token
  */
 angular.module("app")
-    .factory('Interceptor', ["$q","$rootScope","$log","$location",function ($q,$rootScope,$log,$location) {
-        return {
-            request: function (config) {
-                config.headers.token = sessionStorage.getItem("token");
-                return config;
-            },
-            response: function (resp) {
-                if (resp.config.url == '/login') {
-                    sessionStorage.setItem("token", resp.config.headers.token || resp.data.token);
+    .factory('Interceptor', [
+        "$q",
+        "$rootScope",
+        "$log",
+        "$location",
+        function ($q,$rootScope,$log,$location) {
+            return {
+                request: function (config) {
+                    config.headers.token = sessionStorage.getItem("token");
+                    return config;
+                },
+                response: function (resp) {
+                    if (resp.config.url == '/login') {
+                        sessionStorage.setItem("token", resp.config.headers.token || resp.data.token);
+                    }
+                    return resp;
+                },
+                responseError: function (rejection) {
+                    //错误处理
+                    switch (rejection.status) {
+                        case 401:
+                            if (rejection.config.url !== '/login') {
+                                sessionStorage.setItem("token", null);
+                                sessionStorage.setItem("userinfo", null);
+                                $log.log("auth:loginRequired");
+                            }
+                            $location.url("/login");
+                            break;
+                        case 403:
+                            $log.warn("auth:forbidden");
+                            break;
+                        case 404:
+                            $log.warn("url:notFound");
+                            break;
+                        case 405:
+                            $log.warn("method:notAllowed");
+                            break;
+                        case 500:
+                            $log.error("server:error");
+                            break;
+                    }
+                    return $q.reject(rejection);
                 }
-                return resp;
-            },
-            responseError: function (rejection) {
-                //错误处理
-                switch (rejection.status) {
-                    case 401:
-                        if (rejection.config.url !== '/login') {
-                            sessionStorage.setItem("token", null);
-                            sessionStorage.setItem("userinfo", null);
-                            $log.log("auth:loginRequired");
-                        }
-                        $location.url("/login");
-                        break;
-                    case 403:
-                        $log.warn("auth:forbidden");
-                        break;
-                    case 404:
-                        $log.warn("url:notFound");
-                        break;
-                    case 405:
-                        $log.warn("method:notAllowed");
-                        break;
-                    case 500:
-                        $log.error("server:error");
-                        break;
-                }
-                return $q.reject(rejection);
-            }
-        };
-    }
-]);
+            };
+        }
+    ]);
 },{}]},{},[1]);

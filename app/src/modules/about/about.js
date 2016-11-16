@@ -3,7 +3,7 @@ angular.module("app.about", ['ui.router'])
     .config([
         "$stateProvider",
         "$locationProvider",
-        "$urlRouterProvider",function ($stateProvider, $locationProvider, $urlRouterProvider) {
+        "$urlRouterProvider",function ($stateProvider, $locationProvider) {
             $stateProvider
                 .state('main.about', {
                     url: "/about",
@@ -21,7 +21,7 @@ angular.module("app.about", ['ui.router'])
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
-            //                    console.log("post:", res);
+            console.log("post:", res);
         }, function (res) {
             console.log("post:", res);
         });

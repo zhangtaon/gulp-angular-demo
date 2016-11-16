@@ -8,7 +8,7 @@ var gulp = require('gulp'),
  * 代码检查
  */
 gulp.task("JSHint",function(){
-    gulp.src(conf.path.src + "/modules/**/*.js")
+    gulp.src(conf.path.src + "/src/**/*.js")
         .pipe(jshint(".jshintrc"))
         .pipe(jshint.reporter("jshint-stylish"))
         //代码规范有错误直接退出

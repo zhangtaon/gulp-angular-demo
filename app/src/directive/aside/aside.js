@@ -40,47 +40,55 @@ angular.module("aside", [])
             controller: function ($scope) {
                 $scope.menus = $scope.option.datas;
             }
-        }
+        };
     })
-    .factory("_aside", ["$http", "$log","$q", function ($http, $log, $q) {
-        try {
-            var userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-        } catch (e) {
-            $log.error("$log:", e);
-        }
+    .factory("_aside", [
+        "$http",
+        "$log",
+        "$q",
+        function ($http, $log, $q) {
+            var userinfo;
+            try {
+                userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+            } catch (e) {
+                $log.error("$log:", e);
+            }
 
-        /**
-         * 侧边栏数据对象
-         */
-        var aside = {
-            init: function(role){
-                this.data = $http.get("role/" + role + ".json");
-            },
-            data: null,
-            hasRole: function(stateName){
-                var defer = $q.defer(),hasAuth;
-                this.data && this.data.then(function(res){
-                    for(var i= 0,item;item = res.data.datas[i];i++){
-                        if(stateName === item.ref){
-                            hasAuth = true;
-                            break;
-                        }
-                        for(var j= 0,_item;_item = item.items[j];j++){
-                            if(stateName === _item.ref){
+            /**
+             * 侧边栏数据对象
+             */
+            var aside = {
+                init: function(role){
+                    this.data = $http.get("role/" + role + ".json");
+                },
+                data: null,
+                hasRole: function(stateName){
+                    var defer = $q.defer(),hasAuth;
+                    this.data && this.data.then(function(res){
+                        for(var i= 0,item;(item = res.data.datas[i]);i++){
+                            if(stateName === item.ref){
                                 hasAuth = true;
                                 break;
                             }
+                            for(var j= 0,_item;(_item = item.items[j]);j++){
+                                if(stateName === _item.ref){
+                                    hasAuth = true;
+                                    break;
+                                }
+                            }
+                            if(hasAuth){
+                                break;
+                            }
                         }
-                        if(hasAuth)break;
-                    }
-                    defer.resolve(hasAuth);
-                });
-                return defer.promise;
+                        defer.resolve(hasAuth);
+                    });
+                    return defer.promise;
+                }
+            };
+            if(userinfo){
+                aside.init(userinfo.role);
             }
-        };
-        if(userinfo){
-            aside.init(userinfo.role);
+            return aside;
         }
-        return aside;
-    }])
+    ])
 ;
