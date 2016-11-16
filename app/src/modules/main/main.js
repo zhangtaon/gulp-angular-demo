@@ -2,7 +2,8 @@
 angular.module("app.main", [
         'ui.router',
         'aside',
-        'app.test'
+        'app.test',
+        'app.about'
     ])
     .config([
         "$stateProvider",

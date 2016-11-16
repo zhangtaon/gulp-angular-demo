@@ -21,6 +21,9 @@
             }
         ]
     }
+
+ * _aside服务应用于多个依赖（app、main）
+ *
  * Created by zto on 2016/10/20.
  */
 
@@ -36,42 +39,44 @@ angular.module("aside", [])
             templateUrl: '/src/directive/aside/aside.html',
             controller: function ($scope) {
                 $scope.menus = $scope.option.datas;
-                $scope.getFirstClass = function (title) {
-                    return {active: title == $scope.firstActive};
-                };
-                $scope.getSecondClass = function (title) {
-                    return {active: title == $scope.secondActive};
-                };
-                $scope.select = function (tab, $event) {
-                    var target = angular.element($event.target);
-                    if (Number(target.attr("data-level")) == 2) {
-                        $scope.secondActive = target.attr("data-title");
-                    } else {
-                        if ($scope.firstActive != tab.title) {
-                            $scope.secondActive = "";
-                        }
-                    }
-                    $scope.firstActive = tab.title;
-                };
             }
         }
     })
-    .factory("_aside", ["$http", "$log", function ($http, $log) {
+    .factory("_aside", ["$http", "$log","$q", function ($http, $log, $q) {
         try {
             var userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-            $log.log("userinfo:",userinfo);
         } catch (e) {
             $log.error("$log:", e);
         }
-//        var data = userinfo ? $http.get("role/" + userinfo.role + ".json") : null;
+
+        /**
+         * 侧边栏数据对象
+         */
         var aside = {
             init: function(role){
                 this.data = $http.get("role/" + role + ".json");
             },
-            /**
-             * 侧边栏数据
-             */
-            data: null
+            data: null,
+            hasRole: function(stateName){
+                var defer = $q.defer(),hasAuth;
+                this.data && this.data.then(function(res){
+                    for(var i= 0,item;item = res.data.datas[i];i++){
+                        if(stateName === item.ref){
+                            hasAuth = true;
+                            break;
+                        }
+                        for(var j= 0,_item;_item = item.items[j];j++){
+                            if(stateName === _item.ref){
+                                hasAuth = true;
+                                break;
+                            }
+                        }
+                        if(hasAuth)break;
+                    }
+                    defer.resolve(hasAuth);
+                });
+                return defer.promise;
+            }
         };
         if(userinfo){
             aside.init(userinfo.role);

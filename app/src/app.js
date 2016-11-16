@@ -12,35 +12,22 @@ angular.module("app", [
         $urlRouterProvider.otherwise("/login");
         $locationProvider.html5Mode(false);
         $httpProvider.interceptors.push("Interceptor");
-
-        /*
-        $http({
-            url: "/login",
-            method: 'post',
-            data: {
-                key: "test"
-            }
-        }).then(function (res) {
-            console.log("post:", res);
-        }, function (res) {
-            console.log("post:", res);
-        });
-        */
     }])
-    .run(["$rootScope","$state","_aside",function($rootScope,$state,_aside){
+    .run(["$rootScope","$state","_aside", "$log", function($rootScope,$state,_aside,$log){
 
         $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
-            console.log("toState.name:",toState.name);
             var token = sessionStorage.getItem("token");
 
-            //登录页且token有效
+            //token有效 && 登录页
             if(toState.name =='login' && token){
+                $log.log("有效");
                 $state.go("main");
 //                return;
             }
 
-            // 无效
-            if(!token){
+            // token无效
+            if(!token && toState.name !='login'){
+                $log.log("无效");
                 event.preventDefault();
                 $state.go("login",{from:fromState.name,w:'notLogin'});
                 return;
@@ -52,27 +39,13 @@ angular.module("app", [
             }
 
             //验证路由的有效性
-            _aside.data && _aside.data.then(function(res){
-                var hasAuth;
-                for(var i= 0,item;item = res.data.datas[i];i++){
-                    if(toState.name === item.ref){
-                        hasAuth = true;
-                        break;
-                    }
-                    for(var j= 0,_item;_item = item.items[j];j++){
-                        if(toState.name === _item.ref){
-                            hasAuth = true;
-                            break;
-                        }
-                    }
-                    if(hasAuth)break;
-                }
-                if(!hasAuth){
-                    console.log("event",event);
+            _aside.hasRole(toState.name).then(function(auth){
+                $log.log("auth:",auth);
+                if(!auth){
                     event.preventDefault();
                     $state.go("main");
                 }
-            })
+            });
 
         });
     }]);

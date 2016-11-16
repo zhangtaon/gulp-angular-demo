@@ -4,7 +4,11 @@
             "ref":"",
             "title":"test",
             "items": [
-                {"ref":"main.test","title":"test1"}
+                {
+                    "ref":"main.test",
+                    "title":"test1",
+                    "moduleName":"app.test"
+                }
             ]
         },
         {
@@ -13,8 +17,9 @@
             "items": []
         },
         {
-            "ref":"main.About",
+            "ref":"main.about",
             "title":"About",
+            "moduleName":"app.about",
             "items": []
         },
         {
