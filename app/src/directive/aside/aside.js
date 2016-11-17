@@ -64,24 +64,26 @@ angular.module("aside", [])
                 data: null,
                 hasRole: function(stateName){
                     var defer = $q.defer(),hasAuth;
-                    this.data && this.data.then(function(res){
-                        for(var i= 0,item;(item = res.data.datas[i]);i++){
-                            if(stateName === item.ref){
-                                hasAuth = true;
-                                break;
-                            }
-                            for(var j= 0,_item;(_item = item.items[j]);j++){
-                                if(stateName === _item.ref){
+                    if(this.data){
+                        this.data.then(function(res){
+                            for(var i= 0,item;(item = res.data.datas[i]);i++){
+                                if(stateName === item.ref){
                                     hasAuth = true;
                                     break;
                                 }
+                                for(var j= 0,_item;(_item = item.items[j]);j++){
+                                    if(stateName === _item.ref){
+                                        hasAuth = true;
+                                        break;
+                                    }
+                                }
+                                if(hasAuth){
+                                    break;
+                                }
                             }
-                            if(hasAuth){
-                                break;
-                            }
-                        }
-                        defer.resolve(hasAuth);
-                    });
+                            defer.resolve(hasAuth);
+                        });
+                    }
                     return defer.promise;
                 }
             };

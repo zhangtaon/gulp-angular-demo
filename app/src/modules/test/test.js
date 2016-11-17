@@ -21,7 +21,7 @@ angular.module("app.test", ['ui.router'])
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
-            console.log("get:", res);
+            console.log("get:", res.data.data);
         }, function (res) {
             console.log("post:", res);
         });

@@ -17,11 +17,11 @@ angular.module("app.about", ['ui.router'])
     ])
     .controller("aboutCtrl", ["$scope","$http",function ($scope,$http) {
         $http({
-            url: "/demo2",
+            url: "/demo1",
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
-            console.log("post:", res);
+            console.log("post:", res.data.data);
         }, function (res) {
             console.log("post:", res);
         });

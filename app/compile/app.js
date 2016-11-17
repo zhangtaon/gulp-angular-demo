@@ -129,24 +129,26 @@ angular.module("aside", [])
                 data: null,
                 hasRole: function(stateName){
                     var defer = $q.defer(),hasAuth;
-                    this.data && this.data.then(function(res){
-                        for(var i= 0,item;(item = res.data.datas[i]);i++){
-                            if(stateName === item.ref){
-                                hasAuth = true;
-                                break;
-                            }
-                            for(var j= 0,_item;(_item = item.items[j]);j++){
-                                if(stateName === _item.ref){
+                    if(this.data){
+                        this.data.then(function(res){
+                            for(var i= 0,item;(item = res.data.datas[i]);i++){
+                                if(stateName === item.ref){
                                     hasAuth = true;
                                     break;
                                 }
+                                for(var j= 0,_item;(_item = item.items[j]);j++){
+                                    if(stateName === _item.ref){
+                                        hasAuth = true;
+                                        break;
+                                    }
+                                }
+                                if(hasAuth){
+                                    break;
+                                }
                             }
-                            if(hasAuth){
-                                break;
-                            }
-                        }
-                        defer.resolve(hasAuth);
-                    });
+                            defer.resolve(hasAuth);
+                        });
+                    }
                     return defer.promise;
                 }
             };
@@ -177,11 +179,11 @@ angular.module("app.about", ['ui.router'])
     ])
     .controller("aboutCtrl", ["$scope","$http",function ($scope,$http) {
         $http({
-            url: "/demo2",
+            url: "/demo1",
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
-            console.log("post:", res);
+            console.log("post:", res.data.data);
         }, function (res) {
             console.log("post:", res);
         });
@@ -296,7 +298,7 @@ angular.module("app.test", ['ui.router'])
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
-            console.log("get:", res);
+            console.log("get:", res.data.data);
         }, function (res) {
             console.log("post:", res);
         });

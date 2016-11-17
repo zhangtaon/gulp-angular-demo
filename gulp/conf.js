@@ -18,7 +18,7 @@ var gulp = require('gulp'),
     opn = require('opn'),
     _fs = require('fs'),
     _path = require('path'),
-    _rest,_mockDir,
+    _mockDir,
     mock,
     path;
 
@@ -183,7 +183,7 @@ exports.server = function(root){
         opn((conn.https?'https':'http') + '://' + conn.host + ':' + conn.port + "/");
         console.log("browser has open");
     });
-    mock(rest, path.src + path.data);
+    mock(path.src + path.data);
 };
 
 /**
@@ -201,8 +201,7 @@ var readFile = function (fileName) {
  * @param rest
  * @param mockDir
  */
-exports.setRoute = function(rest, mockDir){
-    _rest = rest;
+exports.setRoute = function(mockDir){
     _mockDir = mockDir;
 };
 /**
@@ -211,7 +210,10 @@ exports.setRoute = function(rest, mockDir){
  * @param fileName 假数据文件名
  */
 exports.routing = function(path, fileName){
-    _rest.assign('*', path, function (req, content, callback) {
+    rest.assign('*', path, function (req, content, callback) {
         callback(null, readFile(fileName));
     });
+};
+exports.unRouting = function(path){
+    rest.unassign('*', path);
 };

@@ -12,8 +12,16 @@ var gulp = require('gulp'),
  *  watch assert
  */
 gulp.task('watch', function () {
-    //watch html directory
-    gulp.watch(conf.path.src + '/**/*.html', ['html']);
+
+    //watch router mock directory
+    gulp.watch(conf.path.src + '/mock/*.js', ['mock']);
+
+    //watch html、data、role
+    gulp.watch([
+            conf.path.src + '/**/*.html',
+            conf.path.src + '/data/*.json',
+            conf.path.src + '/role/*.json'
+    ], ['html-data-role']);
 
     //watch less
     gulp.watch(conf.path.src + '/**/*.less', ['less']);
@@ -28,16 +36,27 @@ gulp.task('watch', function () {
     gulp.watch(conf.path.src + conf.path.config + 'browserify-lib.js', ['browserify-lib']);
 
     //watch business module
-//    gulp.watch(conf.path.src + '/modules/**/*.js', ['browserify']);
     gulp.watch(conf.path.src + '/src/**/*.js', ['browserify']);
 });
 
 /**
- * html reload
+ * 路由列表 reload
  */
-gulp.task('html', function () {
-    gulp.src(conf.path.src + '/**/*.html')
-        .pipe(connect.reload());
+gulp.task('mock', function () {
+    var path = "../../" + conf.path.src + conf.path.mock;
+    delete require.cache[require.resolve(path)];
+    require(path)(conf.path.src + conf.path.data);
+});
+
+/**
+ *  html、data（假数据）、role（角色） reload
+ */
+gulp.task('html-data-role', function () {
+    gulp.src([
+            conf.path.src + '/**/*.html',
+            conf.path.src + '/data/*.json',
+            conf.path.src + '/role/*.json'
+    ]).pipe(connect.reload());
 });
 
 /**

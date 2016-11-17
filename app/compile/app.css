@@ -11237,7 +11237,7 @@ footer {
 }
 
 .content {
-  min-height: 600px;
+  min-height: 900px;
   position: relative;
   margin-top: 80px;
   padding-top: 10px;
@@ -11249,14 +11249,14 @@ footer {
   margin-left: 300px;
   border-top-left-radius: 5px;
   background: #f7f7f7;
-  min-height: 1000px;
+  min-height: 900px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
 }
 
 .login {
   width: 400px;
   height: 274px;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
