@@ -86,6 +86,14 @@ gulp.task('build:font',function(){
 });
 
 /**
+ * dist: role
+ */
+gulp.task('build:role',function(){
+    return gulp.src(conf.path.src + conf.path.role + "/*")
+        .pipe(gulp.dest(conf.path.dist + conf.path.role));
+});
+
+/**
  * replace
  */
 gulp.task('replace', function() {
@@ -108,11 +116,11 @@ gulp.task('clean', function () {
 });
 
 /**
- * clean
+ * clean:tmp
  */
 gulp.task('clean:tmp', function () {
     return gulp.src([conf.path.tmp], {read: false})
         .pipe(clean());
 });
 
-gulp.task('build',gulpSequence(['clean'],['build:image','build:js','build:css','build:html','build:font'],['replace','clean:tmp']));
+gulp.task('build',gulpSequence(['clean'],['build:image','build:js','build:css','build:html','build:font','build:role'],['replace','clean:tmp']));

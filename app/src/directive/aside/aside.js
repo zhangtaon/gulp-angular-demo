@@ -36,10 +36,10 @@ angular.module("aside", [])
                 option: "="
             },
             replace: true,
-            templateUrl: '/src/directive/aside/aside.html',
-            controller: function ($scope) {
+            templateUrl: 'src/directive/aside/aside.html',
+            controller: ["$scope",function ($scope) {
                 $scope.menus = $scope.option.datas;
-            }
+            }]
         };
     })
     .factory("_aside", [

@@ -35,9 +35,10 @@ path = exports.path = {
     config: '/config/',
     compile: '/compile',
     data: '/data',
-    mock: '/mock',
     fonts: '/fonts',
-    icon: '/icon'
+    icon: '/icon',
+    mock: '/mock',
+    role: '/role'
 };
 
 mock = require("../" + path.src + path.mock);
@@ -57,11 +58,11 @@ exports.errorHandler = function(e) {
  *  获取所有模板文件
  */
 var prepareTemplates = function() {
-    return gulp.src(path.src + '/modules/**/*.html')
+    return gulp.src(path.src + '/src/**/*.html')
         .pipe(templateCache({
             module:'app',
             transformUrl: function(url) {
-                return 'modules/' + url;
+                return 'src/' + url;
             }
         }));
 };

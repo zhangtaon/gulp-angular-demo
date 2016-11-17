@@ -27,9 +27,14 @@ angular.module("app.main", [
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("mainCtrl", ["$scope","$http","menus",function ($scope,$http,menus) {
+    .controller("mainCtrl", [
+        "$scope",
+        "$http",
+        "menus",
+        function ($scope,$http,menus) {
 
-        //初始化侧边栏
-        $scope.asideOption = menus.data;
+            //初始化侧边栏
+            $scope.asideOption = menus.data;
 
-    }]);
+        }
+    ]);

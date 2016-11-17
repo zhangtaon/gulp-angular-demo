@@ -94,19 +94,19 @@ angular.module("app", [
 
 "use strict";
 angular.module("aside", [])
-    .directive("aside", function () {
+    .directive("aside", [function () {
         return{
             restrict: "A",
             scope: {
                 option: "="
             },
             replace: true,
-            templateUrl: '/src/directive/aside/aside.html',
+            templateUrl: 'src/directive/aside/aside.html',
             controller: function ($scope) {
                 $scope.menus = $scope.option.datas;
             }
         };
-    })
+    }])
     .factory("_aside", [
         "$http",
         "$log",
@@ -267,12 +267,17 @@ angular.module("app.main", [
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("mainCtrl", ["$scope","$http","menus",function ($scope,$http,menus) {
+    .controller("mainCtrl", [
+        "$scope",
+        "$http",
+        "menus",
+        function ($scope,$http,menus) {
 
-        //初始化侧边栏
-        $scope.asideOption = menus.data;
+            //初始化侧边栏
+            $scope.asideOption = menus.data;
 
-    }]);
+        }
+    ]);
 
 },{}],7:[function(require,module,exports){
 "use strict";
