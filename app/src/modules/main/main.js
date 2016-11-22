@@ -2,6 +2,7 @@
 angular.module("app.main", [
         'ui.router',
         'aside',
+        'dom',
         'ui.bootstrap',
         'app.test',
         'app.about'
@@ -32,31 +33,17 @@ angular.module("app.main", [
         "$scope",
         "$http",
         "menus",
-        "_main",
-        function ($scope,$http,menus,_main) {
+        "_dom",
+        function ($scope,$http,menus,_dom) {
 
             //初始化侧边栏
             $scope.asideOption = {
                 datas: menus.data.datas,
                 spread: function(){
-                    _main.domNode.toggleClass("spread");
+                    _dom.main.toggleClass("spread");
                 }
             };
 
         }
     ])
-    .factory("_main",function(){
-        return {
-            domNode:null
-        };
-    })
-    .directive("main",["_main",function(_main){
-        return {
-            scope:{},
-            restrict: "A",
-            link: function ($scope,ele) {
-                _main.domNode = ele;
-            }
-        };
-    }])
 ;

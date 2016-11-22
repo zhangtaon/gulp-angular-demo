@@ -2,12 +2,13 @@
 require("../src/app");
 require("../src/service/interceptor");
 require("../src/directive/aside/aside");
+require("../src/directive/dom");
 require("../src/modules/main/main");
 require("../src/modules/login/login");
 require("../src/modules/test/test");
 require("../src/modules/about/about");
 
-},{"../src/app":2,"../src/directive/aside/aside":3,"../src/modules/about/about":4,"../src/modules/login/login":5,"../src/modules/main/main":6,"../src/modules/test/test":7,"../src/service/interceptor":8}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/aside/aside":3,"../src/directive/dom":4,"../src/modules/about/about":5,"../src/modules/login/login":6,"../src/modules/main/main":7,"../src/modules/test/test":8,"../src/service/interceptor":9}],2:[function(require,module,exports){
 "use strict";
 angular.module("app", [
     "ui.router",
@@ -163,6 +164,38 @@ angular.module("aside", [])
     ])
 ;
 },{}],4:[function(require,module,exports){
+/**
+ * dom指令
+ * 以键值对的方式存储基于jqlite包装后的dom对象，
+ * 基于jqlite操作dom
+ *
+ * Created by zto on 2016/11/22.
+ */
+
+"use strict";
+angular.module("dom", [])
+    .directive("dom", ["_dom","$log",function (_dom,$log) {
+        return {
+            scope:{},
+            restrict: "A",
+            link: function ($scope,ele,attrs) {
+                if(_dom[attrs.domKey]){
+                    $log.error("dom指令使用失败，已存在dom-name为"+ attrs.domKey + "的节点，"+ "请重新指定dom-name的值");
+                }else{
+                    _dom[attrs.domKey] = ele;
+                }
+            }
+        };
+    }])
+    /**
+     * 如果用户已经登录，根据用户角色获取侧边栏数据
+     */
+    .factory("_dom",function () {
+            return {};
+        }
+    )
+;
+},{}],5:[function(require,module,exports){
 "use strict";
 angular.module("app.about", ['ui.router'])
     .config([
@@ -193,7 +226,7 @@ angular.module("app.about", ['ui.router'])
     }]
 );
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 angular.module("app.login", ['ui.router'])
     .config([
@@ -240,11 +273,12 @@ angular.module("app.login", ['ui.router'])
             };
         }])
 ;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 angular.module("app.main", [
         'ui.router',
         'aside',
+        'dom',
         'ui.bootstrap',
         'app.test',
         'app.about'
@@ -275,36 +309,22 @@ angular.module("app.main", [
         "$scope",
         "$http",
         "menus",
-        "_main",
-        function ($scope,$http,menus,_main) {
+        "_dom",
+        function ($scope,$http,menus,_dom) {
 
             //初始化侧边栏
             $scope.asideOption = {
                 datas: menus.data.datas,
                 spread: function(){
-                    _main.domNode.toggleClass("spread");
+                    _dom.main.toggleClass("spread");
                 }
             };
 
         }
     ])
-    .factory("_main",function(){
-        return {
-            domNode:null
-        };
-    })
-    .directive("main",["_main",function(_main){
-        return {
-            scope:{},
-            restrict: "A",
-            link: function ($scope,ele) {
-                _main.domNode = ele;
-            }
-        };
-    }])
 ;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 angular.module("app.test", ['ui.router'])
     .config([
@@ -335,7 +355,7 @@ angular.module("app.test", ['ui.router'])
     }]
 );
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 /**
  * http拦截器
