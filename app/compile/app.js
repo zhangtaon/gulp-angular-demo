@@ -84,7 +84,10 @@ angular.module("app", [
 
                 ]
             }
-        ]
+        ],
+        注：隐藏侧边栏
+        spread: function(){
+                }
     }
 
  * _aside服务应用于多个依赖（app、main）
@@ -101,11 +104,7 @@ angular.module("aside", [])
                 option: "="
             },
             replace: true,
-            templateUrl: 'src/directive/aside/aside.html',
-            controller: ["$scope",function ($scope) {
-//                $scope.menus = $scope.option.datas;
-//                $scope.spread = $scope.option.spread;
-            }]
+            templateUrl: 'src/directive/aside/aside.html'
         };
     })
     /**
@@ -298,7 +297,7 @@ angular.module("app.main", [
         return {
             scope:{},
             restrict: "A",
-            link: function ($scope,ele,attrs) {
+            link: function ($scope,ele) {
                 _main.domNode = ele;
             }
         };

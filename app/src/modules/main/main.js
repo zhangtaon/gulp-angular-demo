@@ -54,7 +54,7 @@ angular.module("app.main", [
         return {
             scope:{},
             restrict: "A",
-            link: function ($scope,ele,attrs) {
+            link: function ($scope,ele) {
                 _main.domNode = ele;
             }
         };
