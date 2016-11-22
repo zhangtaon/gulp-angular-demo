@@ -1,6 +1,7 @@
 <div role="navigation" class="aside closed" aria-hidden="false">
+    <button ng-click="option.spread()">收缩</button>
     <ul>
-        <li ui-sref-active="active" ng-repeat="menu in menus">
+        <li ui-sref-active="active" ng-repeat="menu in option.datas">
             <a ui-sref="{{menu.ref}}" ng-if="menu.ref">{{menu.title}}</a>
             <a ng-if="!menu.ref">{{menu.title}}</a>
             <ul>

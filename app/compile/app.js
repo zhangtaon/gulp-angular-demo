@@ -94,7 +94,7 @@ angular.module("app", [
 
 "use strict";
 angular.module("aside", [])
-    .directive("aside", [function () {
+    .directive("aside", function () {
         return{
             restrict: "A",
             scope: {
@@ -102,11 +102,15 @@ angular.module("aside", [])
             },
             replace: true,
             templateUrl: 'src/directive/aside/aside.html',
-            controller: function ($scope) {
-                $scope.menus = $scope.option.datas;
-            }
+            controller: ["$scope",function ($scope) {
+//                $scope.menus = $scope.option.datas;
+//                $scope.spread = $scope.option.spread;
+            }]
         };
-    }])
+    })
+    /**
+     * 如果用户已经登录，根据用户角色获取侧边栏数据
+     */
     .factory("_aside", [
         "$http",
         "$log",
@@ -242,6 +246,7 @@ angular.module("app.login", ['ui.router'])
 angular.module("app.main", [
         'ui.router',
         'aside',
+        'ui.bootstrap',
         'app.test',
         'app.about'
     ])
@@ -271,13 +276,34 @@ angular.module("app.main", [
         "$scope",
         "$http",
         "menus",
-        function ($scope,$http,menus) {
+        "_main",
+        function ($scope,$http,menus,_main) {
 
             //初始化侧边栏
-            $scope.asideOption = menus.data;
+            $scope.asideOption = {
+                datas: menus.data.datas,
+                spread: function(){
+                    _main.domNode.toggleClass("spread");
+                }
+            };
 
         }
-    ]);
+    ])
+    .factory("_main",function(){
+        return {
+            domNode:null
+        };
+    })
+    .directive("main",["_main",function(_main){
+        return {
+            scope:{},
+            restrict: "A",
+            link: function ($scope,ele,attrs) {
+                _main.domNode = ele;
+            }
+        };
+    }])
+;
 
 },{}],7:[function(require,module,exports){
 "use strict";

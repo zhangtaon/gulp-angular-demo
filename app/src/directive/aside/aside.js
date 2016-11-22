@@ -38,10 +38,14 @@ angular.module("aside", [])
             replace: true,
             templateUrl: 'src/directive/aside/aside.html',
             controller: ["$scope",function ($scope) {
-                $scope.menus = $scope.option.datas;
+//                $scope.menus = $scope.option.datas;
+//                $scope.spread = $scope.option.spread;
             }]
         };
     })
+    /**
+     * 如果用户已经登录，根据用户角色获取侧边栏数据
+     */
     .factory("_aside", [
         "$http",
         "$log",

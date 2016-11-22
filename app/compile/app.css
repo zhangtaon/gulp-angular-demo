@@ -11246,11 +11246,34 @@ footer {
 .main {
   position: relative;
   padding: 3em 4em;
-  margin-left: 300px;
   border-top-left-radius: 5px;
   background: #f7f7f7;
   min-height: 900px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+@media screen and (max-width: 2000px) {
+  .aside {
+    width: 18%;
+  }
+
+  .main {
+    margin-left: 15%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .aside {
+    width: 170px;
+  }
+
+  .main {
+    margin-left: 150px;
+  }
+}
+
+.spread {
+  margin-left: 28px;
 }
 
 .login {
@@ -11334,22 +11357,4 @@ footer {
 
 .aside ul li.active li a {
   color: #aaa;
-}
-
-@media screen and (max-width: 2000px) {
-  .aside {
-    width: 20%;
-  }
-}
-
-@media screen and (max-width: 1700px) {
-  .aside {
-    width: 22%;
-  }
-}
-
-@media screen and (max-width: 1400px) {
-  .aside {
-    width: 26%;
-  }
 }
