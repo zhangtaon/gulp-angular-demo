@@ -24,6 +24,7 @@ angular.module("app.login", ['ui.router'])
             $scope.login = function () {
                 _loginService.login();
             };
+
         }
     ])
     .factory("_loginService",[

@@ -251,6 +251,7 @@ angular.module("app.login", ['ui.router'])
         "_loginService",
         function ($scope, $rootScope, _loginService) {
             $scope.login = function () {
+                console.log("test browerify zto haha");
                 _loginService.login();
             };
         }
@@ -312,9 +313,12 @@ angular.module("app.main", [
         "_dom",
         function ($scope,$http,menus,_dom) {
 
+            console.log("test browerify aaa");
             //初始化侧边栏
             $scope.asideOption = {
+                //侧边栏所需数据
                 datas: menus.data.datas,
+                //侧边栏隐藏显示
                 spread: function(){
                     _dom.main.toggleClass("spread");
                 }

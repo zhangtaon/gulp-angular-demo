@@ -11,7 +11,7 @@ var gulp = require('gulp'),
 /**
  *  watch assert
  */
-gulp.task('watch', function () {
+gulp.task('watch', ['browserify','less'],function () {
 
     //watch router mock directory
     gulp.watch(conf.path.src + '/mock/*.js', ['mock']);
@@ -29,14 +29,6 @@ gulp.task('watch', function () {
     //watch icon
     gulp.watch(conf.path.src + conf.path.icon + '/*.svg', ['icon-font']);
 
-    //watch business browerify
-    gulp.watch(conf.path.src + conf.path.config + 'browserify.js', ['browserify']);
-
-    //watch vendor browerify
-    gulp.watch(conf.path.src + conf.path.config + 'browserify-lib.js', ['browserify-lib']);
-
-    //watch business module
-    gulp.watch(conf.path.src + '/src/**/*.js', ['browserify']);
 });
 
 /**
@@ -75,15 +67,11 @@ gulp.task('less', function () {
 });
 
 /**
- * 合并js脚本——公共类库 reload
- */
-gulp.task("browserify-lib",function(){
-    conf.compile("browserify-lib.js",'lib',{uglify:true});
-});
-
-/**
- * 合并js脚本——业务模块 reload
+ * 合并js脚本 reload
  */
 gulp.task("browserify",function(){
+    //合并js脚本——业务模块 reload
     conf.compile("browserify.js",'app');
+    //合并js脚本——公共类库 reload
+    conf.compile("browserify-lib.js",'lib',{uglify:true});
 });
