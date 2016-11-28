@@ -1,4 +1,8 @@
 "use strict";
+
+/**
+ * Created by zto on 2016/10/20.
+ */
 angular.module("app.about", ['ui.router'])
     .config([
         "$stateProvider",

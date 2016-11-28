@@ -1,7 +1,7 @@
 /**
  * 侧边栏指令
  * option为指定的配置参数,他的值为绑定在所在模块控制器作用域上的属性
- * option：{
+   option：{
         datas：
         [
             {
@@ -11,7 +11,7 @@
                     {href:"test1",title:"test1"},
                     {href:"test2",title:"test2"}
                 ]
-              },
+            },
             {
                 href:"Projects",
                 title:"Projects",
@@ -22,7 +22,8 @@
         ],
         注：隐藏侧边栏
         spread: function(){
-                }
+
+        }
     }
 
  * _aside服务应用于多个依赖（app、main）
@@ -57,14 +58,18 @@ angular.module("aside", [])
                 $log.error("$log:", e);
             }
 
+
             /**
              * 侧边栏数据对象
              */
             var aside = {
+                //初始话菜单列表
                 init: function(role){
                     this.data = $http.get("role/" + role + ".json");
                 },
+                //菜单存储对象
                 data: null,
+                //验证是否有权限
                 hasRole: function(stateName){
                     var defer = $q.defer(),hasAuth;
                     if(this.data){

@@ -1,6 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("../src/app");
 require("../src/service/interceptor");
+require("../src/directive/tools");
 require("../src/directive/aside/aside");
 require("../src/directive/dom");
 require("../src/modules/main/main");
@@ -8,12 +9,18 @@ require("../src/modules/login/login");
 require("../src/modules/test/test");
 require("../src/modules/about/about");
 
-},{"../src/app":2,"../src/directive/aside/aside":3,"../src/directive/dom":4,"../src/modules/about/about":5,"../src/modules/login/login":6,"../src/modules/main/main":7,"../src/modules/test/test":8,"../src/service/interceptor":9}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/aside/aside":3,"../src/directive/dom":4,"../src/directive/tools":5,"../src/modules/about/about":6,"../src/modules/login/login":7,"../src/modules/main/main":8,"../src/modules/test/test":9,"../src/service/interceptor":10}],2:[function(require,module,exports){
 "use strict";
+
+/**
+ * 项目启动入口文件
+ * Created by zto on 2016/9/20.
+ */
 angular.module("app", [
     "ui.router",
     "app.login",
     "app.main",
+    'tools'
 ]).config([
     "$httpProvider",
     "$stateProvider",
@@ -28,9 +35,14 @@ angular.module("app", [
         "$rootScope",
         "$state",
         "_aside",
-        function($rootScope,$state,_aside){
+        "_dom",
+        function($rootScope,$state,_aside,_dom){
 
             $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState){
+                
+                //_dom服务重置ele列表
+                _dom.reset();
+
                 var token = sessionStorage.getItem("token");
 
                 //token有效 如果是请求登录页就返回main页面
@@ -67,7 +79,7 @@ angular.module("app", [
 /**
  * 侧边栏指令
  * option为指定的配置参数,他的值为绑定在所在模块控制器作用域上的属性
- * option：{
+   option：{
         datas：
         [
             {
@@ -77,7 +89,7 @@ angular.module("app", [
                     {href:"test1",title:"test1"},
                     {href:"test2",title:"test2"}
                 ]
-              },
+            },
             {
                 href:"Projects",
                 title:"Projects",
@@ -88,7 +100,8 @@ angular.module("app", [
         ],
         注：隐藏侧边栏
         spread: function(){
-                }
+
+        }
     }
 
  * _aside服务应用于多个依赖（app、main）
@@ -123,14 +136,18 @@ angular.module("aside", [])
                 $log.error("$log:", e);
             }
 
+
             /**
              * 侧边栏数据对象
              */
             var aside = {
+                //初始话菜单列表
                 init: function(role){
                     this.data = $http.get("role/" + role + ".json");
                 },
+                //菜单存储对象
                 data: null,
+                //验证是否有权限
                 hasRole: function(stateName){
                     var defer = $q.defer(),hasAuth;
                     if(this.data){
@@ -170,33 +187,74 @@ angular.module("aside", [])
  * 基于jqlite操作dom
  *
  * Created by zto on 2016/11/22.
+ *
+ *
+ * case:
+ *
+ * html
+ * <div dom dom-key="main" class="main" ui-view></div>
+ *
+ * js
+ * controller("mainCtrl", [
+ *      "_dom",
+ *      function (_dom) {
+ *            _dom.get("main").toggleClass("spread");
+ *      }
+ *  ])
  */
 
 "use strict";
 angular.module("dom", [])
-    .directive("dom", ["_dom","$log",function (_dom,$log) {
+    .directive("dom", ["_dom",function (_dom) {
         return {
             scope:{},
             restrict: "A",
             link: function ($scope,ele,attrs) {
-                if(_dom[attrs.domKey]){
-                    $log.error("dom指令使用失败，已存在dom-name为"+ attrs.domKey + "的节点，"+ "请重新指定dom-name的值");
-                }else{
-                    _dom[attrs.domKey] = ele;
-                }
+                _dom.set(attrs.domKey,ele);
             }
         };
     }])
     /**
      * 如果用户已经登录，根据用户角色获取侧边栏数据
      */
-    .factory("_dom",function () {
-            return {};
-        }
+    .factory("_dom",["$log",function ($log) {
+        var _dom = {};
+            return {
+                set: function(key,ele){
+                    if(_dom[key]){
+                        $log.error("dom指令使用失败，当前页面已存在dom-name为"+ key + "的节点，"+ "请重新指定dom-name的值");
+                    }else {
+                        _dom[key] = ele;
+                    }
+                },
+                get: function(key){
+                    return _dom[key];
+                },
+                reset: function(){
+                    _dom = {};
+                }
+            };
+        }]
     )
 ;
 },{}],5:[function(require,module,exports){
+/**
+ * 工具模块
+ * Created by zto on 2016/11/25.
+ */
+
 "use strict";
+angular.module("tools", [
+    "ui.bootstrap",
+    "aside",
+    "dom"
+]);
+},{}],6:[function(require,module,exports){
+"use strict";
+
+/**
+ * Created by zto on 2016/10/20.
+ */
 angular.module("app.about", ['ui.router'])
     .config([
         "$stateProvider",
@@ -226,8 +284,13 @@ angular.module("app.about", ['ui.router'])
     }]
 );
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
+
+/**
+ * 登录模块
+ * Created by zto on 2016/10/20.
+ */
 angular.module("app.login", ['ui.router'])
     .config([
         "$stateProvider",
@@ -251,7 +314,6 @@ angular.module("app.login", ['ui.router'])
         "_loginService",
         function ($scope, $rootScope, _loginService) {
             $scope.login = function () {
-                console.log("test browerify zto haha");
                 _loginService.login();
             };
         }
@@ -274,23 +336,22 @@ angular.module("app.login", ['ui.router'])
             };
         }])
 ;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
+
+/**
+ * 业务框架模块
+ * 左：菜单
+ * 右：页面内容
+ * Created by zto on 2016/10/20.
+ */
 angular.module("app.main", [
-        'ui.router',
-        'aside',
-        'dom',
-        'ui.bootstrap',
         'app.test',
         'app.about'
     ])
     .config([
         "$stateProvider",
-        "$locationProvider",
-        "$urlRouterProvider",
-        function ($stateProvider, $locationProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise("/");
-//            $locationProvider.hashPrefix('!');
+        function ($stateProvider) {
             $stateProvider
                 .state('main', {
                     url: "/main",
@@ -302,8 +363,6 @@ angular.module("app.main", [
                         }]
                     }
                 });
-            // Without server side support html5 must be disabled.
-            $locationProvider.html5Mode(false);
         }
     ])
     .controller("mainCtrl", [
@@ -313,23 +372,25 @@ angular.module("app.main", [
         "_dom",
         function ($scope,$http,menus,_dom) {
 
-            console.log("test browerify aaa");
             //初始化侧边栏
             $scope.asideOption = {
                 //侧边栏所需数据
                 datas: menus.data.datas,
                 //侧边栏隐藏显示
                 spread: function(){
-                    _dom.main.toggleClass("spread");
+                    _dom.get("main").toggleClass("spread");
                 }
             };
-
         }
     ])
 ;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
+
+/**
+ * Created by zto on 2016/10/20.
+ */
 angular.module("app.test", ['ui.router'])
     .config([
         "$stateProvider",
@@ -359,11 +420,13 @@ angular.module("app.test", ['ui.router'])
     }]
 );
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
+
 /**
  * http拦截器
  * 注：封装登录token
+ * Created by zto on 2016/10/20.
  */
 angular.module("app")
     .factory('Interceptor', [

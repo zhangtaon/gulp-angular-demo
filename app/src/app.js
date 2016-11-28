@@ -1,8 +1,14 @@
 "use strict";
+
+/**
+ * 项目启动入口文件
+ * Created by zto on 2016/9/20.
+ */
 angular.module("app", [
     "ui.router",
     "app.login",
     "app.main",
+    'tools'
 ]).config([
     "$httpProvider",
     "$stateProvider",
@@ -17,9 +23,14 @@ angular.module("app", [
         "$rootScope",
         "$state",
         "_aside",
-        function($rootScope,$state,_aside){
+        "_dom",
+        function($rootScope,$state,_aside,_dom){
 
             $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState){
+                
+                //_dom服务重置ele列表
+                _dom.reset();
+
                 var token = sessionStorage.getItem("token");
 
                 //token有效 如果是请求登录页就返回main页面

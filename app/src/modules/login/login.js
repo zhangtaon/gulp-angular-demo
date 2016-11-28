@@ -1,4 +1,9 @@
 "use strict";
+
+/**
+ * 登录模块
+ * Created by zto on 2016/10/20.
+ */
 angular.module("app.login", ['ui.router'])
     .config([
         "$stateProvider",
@@ -24,7 +29,6 @@ angular.module("app.login", ['ui.router'])
             $scope.login = function () {
                 _loginService.login();
             };
-
         }
     ])
     .factory("_loginService",[

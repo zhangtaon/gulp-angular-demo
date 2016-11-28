@@ -2,7 +2,7 @@
     <button ng-click="option.spread()">收缩</button>
     <ul>
         <li ui-sref-active="active" ng-repeat="menu in option.datas">
-            <a ui-sref="{{menu.ref}}" ng-if="menu.ref">{{menu.title}}</a>
+            <a ng-if="menu.ref" ui-sref="{{menu.ref}}">{{menu.title}}</a>
             <a ng-if="!menu.ref">{{menu.title}}</a>
             <ul>
                 <li ui-sref-active="active" ng-repeat="item in menu.items">

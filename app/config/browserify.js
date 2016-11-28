@@ -1,5 +1,6 @@
 require("../src/app");
 require("../src/service/interceptor");
+require("../src/directive/tools");
 require("../src/directive/aside/aside");
 require("../src/directive/dom");
 require("../src/modules/main/main");

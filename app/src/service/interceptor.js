@@ -1,7 +1,9 @@
 "use strict";
+
 /**
  * http拦截器
  * 注：封装登录token
+ * Created by zto on 2016/10/20.
  */
 angular.module("app")
     .factory('Interceptor', [
