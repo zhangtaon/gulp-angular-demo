@@ -203,7 +203,7 @@ angular.module("app.directive", [
  * Created by zto on 2016/11/22.
  *
  *
- * case:
+ * dom case:
  *
  * html
  * <div dom dom-key="main" class="main" ui-view></div>
@@ -215,6 +215,12 @@ angular.module("app.directive", [
  *            _dom.get("main").toggleClass("spread");
  *      }
  *  ])
+ *
+ *
+ * bindVerify case:
+ * <input type="password" ng-model="registerModel.password" class="form-control" id="password" name="password" placeholder="密码" required>
+ * <input type="password" ng-model="verifyPass" class="form-control" id="verifyPass" name="verifyPass" placeholder="确认密码" bind-verify="{{registerModel.password}}" required>
+ *
  */
 
 "use strict";
@@ -229,7 +235,7 @@ angular.module("dom", [])
         };
     }])
     /**
-     * 如果用户已经登录，根据用户角色获取侧边栏数据
+     * 封装jqlite对象
      */
     .factory("_dom",["$log",function ($log) {
         var _dom = {};
@@ -250,6 +256,26 @@ angular.module("dom", [])
             };
         }]
     )
+    /**
+     * 验证指令：确认密码
+     */
+    .directive("bindVerify", [function () {
+        return {
+            restrict: 'A',
+            require: '?ngModel',
+            link: function(scope, elm, attr, ctrl) {
+                if (!ctrl) return;
+                var bindVal;
+                attr.$observe('bindVerify', function(value) {
+                    bindVal = value;
+                    ctrl.$validate();
+                });
+                ctrl.$validators.bindVerify = function(modelValue, viewValue) {
+                    return ctrl.$isEmpty(viewValue) || viewValue === bindVal;
+                };
+            }
+        };
+    }])
 ;
 },{}],7:[function(require,module,exports){
 "use strict";

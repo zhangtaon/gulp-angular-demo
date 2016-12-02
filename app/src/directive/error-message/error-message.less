@@ -1,13 +1,18 @@
+//无效表单
+@formInvalid: form-invalid;
+
 //表单验证通过
-.form-valid {
-  //有效状态下输入框边框和字体颜色
+.form-valid,
+.@{formInvalid} {
+  //输入框边框和字体颜色
   .ng-valid {
     border-color: #b3d465!important;
     color: #b3d465!important;
   }
 }
+
 //表单验证没有通过
-.form-invalid {
+.@{formInvalid} {
   //无效状态下输入框边框和字体颜色
   .ng-invalid {
     border-color: #e60000!important;
@@ -18,6 +23,7 @@
     display: block;
   }
 }
+
 //输入框验证信息默认不显示
 .ng-active {
   position: absolute;

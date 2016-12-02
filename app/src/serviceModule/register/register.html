@@ -22,7 +22,7 @@
             <div class="form-group">
                 <label for="verifyPass" class="col-xs-3 control-label">确认密码</label>
                 <div class="col-xs-9">
-                    <input type="password" ng-model="verifyPass" class="form-control" id="verifyPass" name="verifyPass" placeholder="确认密码" required>
+                    <input type="password" ng-model="verifyPass" class="form-control" id="verifyPass" name="verifyPass" placeholder="确认密码" bind-verify="{{registerModel.password}}" required>
                     <div ng-messages="frm.verifyPass.$error" role="alert">
                         <div ng-messages-include="/src/directive/error-message/error-message.html"></div>
                     </div>

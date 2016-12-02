@@ -11313,7 +11313,8 @@ footer {
   color: #aaa;
 }
 
-.form-valid .ng-valid {
+.form-valid .ng-valid,
+.form-invalid .ng-valid {
   border-color: #b3d465!important;
   color: #b3d465!important;
 }
