@@ -12,7 +12,7 @@ angular.module("app.about", ['ui.router'])
                 .state('main.about', {
                     url: "/about",
                     controller: 'aboutCtrl',
-                    templateUrl: 'src/modules/about/about.html'
+                    templateUrl: '/src/module/about/about.html'
                 });
 
             // Without server side support html5 must be disabled.

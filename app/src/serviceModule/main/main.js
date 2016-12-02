@@ -17,7 +17,7 @@ angular.module("app.main", [
                 .state('main', {
                     url: "/main",
                     controller: 'mainCtrl',
-                    templateUrl: 'src/modules/main/main.html',
+                    templateUrl: 'src/serviceModule/main/main.html',
                     resolve: {
                         menus: ["_aside",function(_aside){
                             return _aside.data;

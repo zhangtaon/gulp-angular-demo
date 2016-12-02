@@ -1,0 +1,33 @@
+//表单验证通过
+.form-valid {
+  //有效状态下输入框边框和字体颜色
+  .ng-valid {
+    border-color: #b3d465!important;
+    color: #b3d465!important;
+  }
+}
+//表单验证没有通过
+.form-invalid {
+  //无效状态下输入框边框和字体颜色
+  .ng-invalid {
+    border-color: #e60000!important;
+    color: #e60000!important;
+  }
+  //显示输入框验证信息
+  .ng-active {
+    display: block;
+  }
+}
+//输入框验证信息默认不显示
+.ng-active {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 100%;
+  padding: 7px 13px;
+  color: red;
+  display: none;
+  i{
+    margin-right: 3px;
+  }
+}

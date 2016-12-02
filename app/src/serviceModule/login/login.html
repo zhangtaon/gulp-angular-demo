@@ -1,0 +1,71 @@
+<section class="login">
+    <div class="login-wrap">
+        <form class="form-horizontal" role="form" name="frm" ng-class="{'form-valid': submitted && frm.$valid,'form-invalid': submitted && frm.$invalid}" ng-submit="login(frm.$valid);" novalidate>
+            <div class="row error-tip">
+                <div class="col-xs-12">
+                    <div class="alert-wrap error">
+                        <div class="alert alert-danger">
+                            <div class="media">
+                                <div class="media-left">
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                </div>
+                                <div class="media-body">
+                                    <span ng-show="frm.account.$invalid && frm.password.$invalid">请输入账户名和密码</span>
+                                    <span ng-show="frm.account.$valid && frm.password.$invalid">请输入密码</span>
+                                    <span ng-show="frm.account.$invalid && frm.password.$valid">请输入账户名</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-wrap ok" ng-hide="logined">
+                        <div class="alert alert-danger">
+                            <div class="media">
+                                <div class="media-left">
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                </div>
+                                <div class="media-body">
+                                    <span>你输入的账户名和密码不匹配</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" ng-model="loginModel.account" name="account" maxlength="32" placeholder="用户名" required/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                        <input type="password" class="form-control" ng-model="loginModel.password" name="password" placeholder="密码" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-offset-1 col-xs-12">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="remember"> 记住密码
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-default btn-block">登录</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <a class="pull-right" ui-sref="register">免费注册</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

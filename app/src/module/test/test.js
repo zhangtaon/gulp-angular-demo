@@ -12,7 +12,7 @@ angular.module("app.test", ['ui.router'])
                 .state('main.test', {
                     url: "/test",
                     controller: 'testCtrl',
-                    templateUrl: 'src/modules/test/test.html'
+                    templateUrl: '/src/module/test/test.html'
                 });
 
             // Without server side support html5 must be disabled.

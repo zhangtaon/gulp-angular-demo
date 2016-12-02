@@ -11175,6 +11175,7 @@ body {
 }
 
 body {
+  font-family: "microsoft yahei";
   background: #444 url("../image/debut_dark.png") repeat;
   color: #666;
   text-size-adjust: 100%;
@@ -11241,53 +11242,6 @@ footer {
   position: relative;
   margin-top: 80px;
   padding-top: 10px;
-}
-
-.main {
-  position: relative;
-  padding: 20px;
-  border-top-left-radius: 5px;
-  background: #f7f7f7;
-  min-height: 900px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-}
-
-@media screen and (max-width: 2000px) {
-  .aside {
-    width: 18%;
-  }
-
-  .main {
-    margin-left: 15%;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .aside {
-    width: 170px;
-  }
-
-  .main {
-    margin-left: 150px;
-  }
-}
-
-.spread {
-  margin-left: 28px;
-}
-
-.login {
-  width: 400px;
-  height: 274px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  padding: 20px;
-  background-color: mediumspringgreen;
-  border-radius: 3px;
 }
 
 .aside {
@@ -11357,4 +11311,111 @@ footer {
 
 .aside ul li.active li a {
   color: #aaa;
+}
+
+.form-valid .ng-valid {
+  border-color: #b3d465!important;
+  color: #b3d465!important;
+}
+
+.form-invalid .ng-invalid {
+  border-color: #e60000!important;
+  color: #e60000!important;
+}
+
+.form-invalid .ng-active {
+  display: block;
+}
+
+.ng-active {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 100%;
+  padding: 7px 13px;
+  color: red;
+  display: none;
+}
+
+.ng-active i {
+  margin-right: 3px;
+}
+
+.login {
+  width: 400px;
+  height: 313px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  padding: 20px 40px;
+  background-color: mediumspringgreen;
+  border-radius: 3px;
+}
+
+.error-tip {
+  margin-bottom: 48px;
+}
+
+.alert {
+  padding: 3px 15px;
+  margin-bottom: 15px;
+}
+
+.alert-wrap {
+  display: none;
+  position: relative;
+}
+
+.alert-wrap .alert {
+  position: absolute;
+}
+
+.form-invalid .alert-wrap.error {
+  display: block;
+}
+
+.form-valid .alert-wrap.ok {
+  display: block;
+}
+
+.main {
+  position: relative;
+  padding: 20px;
+  border-top-left-radius: 5px;
+  background: #f7f7f7;
+  min-height: 900px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+@media screen and (max-width: 2000px) {
+  .aside {
+    width: 18%;
+  }
+
+  .main {
+    margin-left: 15%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .aside {
+    width: 170px;
+  }
+
+  .main {
+    margin-left: 150px;
+  }
+}
+
+.spread {
+  margin-left: 28px;
+}
+
+.register {
+  background: #f7f7f7;
+  min-height: 900px;
+  padding: 20px;
 }

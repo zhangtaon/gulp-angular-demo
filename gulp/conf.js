@@ -63,7 +63,7 @@ var prepareTemplates = function() {
         .pipe(templateCache({
             module:'app',
             transformUrl: function(url) {
-                return 'src/' + url;
+                return '/src/' + url;
             }
         }));
 };

@@ -18,7 +18,7 @@ angular.module("app")
                     return config;
                 },
                 response: function (resp) {
-                    if (resp.config.url == '/login') {
+                    if (resp.config.url == '/login' && resp.data.error.returnCode==200) {
                         sessionStorage.setItem("token", resp.config.headers.token || resp.data.token);
                     }
                     return resp;

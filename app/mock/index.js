@@ -19,4 +19,5 @@ module.exports = function (mockDir) {
     conf.routing("/demo1",'demo1.json');
     conf.routing("/demo2",'demo2.json');
     conf.routing("/login",'login.json');//登录接口
+    conf.routing("/register",'register.json');//登录接口
 };

@@ -4,8 +4,9 @@
  */
 
 "use strict";
-angular.module("tools", [
+angular.module("app.directive", [
     "ui.bootstrap",
+    "ngMessages",
     "aside",
     "dom"
 ]);

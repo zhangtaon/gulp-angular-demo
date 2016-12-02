@@ -2,7 +2,8 @@
   "strict": "global",
   "globals": {
     "angular": false,
-    "sessionStorage": false
+    "sessionStorage": false,
+    "require": false
   },
   "noempty":true,
   "nonew": true,

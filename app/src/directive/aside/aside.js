@@ -40,7 +40,7 @@ angular.module("aside", [])
                 option: "="
             },
             replace: true,
-            templateUrl: 'src/directive/aside/aside.html'
+            templateUrl: '/src/directive/aside/aside.html'
         };
     })
     /**

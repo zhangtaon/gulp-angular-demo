@@ -1,0 +1,39 @@
+<section class="register">
+    <div class="register-wrap col-xs-3 col-xs-offset-4">
+        <form class="form-horizontal" role="form" name="frm" ng-class="{'form-valid': submitted && frm.$valid,'form-invalid': submitted && frm.$invalid}" ng-submit="register(frm.$valid);" novalidate>
+            <div class="form-group">
+                <label for="account" class="col-xs-3 control-label">账户名</label>
+                <div class="col-xs-9">
+                     <input type="email" class="form-control" ng-model="registerModel.account" id="account" name="account" placeholder="账户名" ng-maxlength="32" required>
+                     <div ng-messages="frm.account.$error" role="alert" class="message">
+                         <div ng-messages-include="/src/directive/error-message/error-message.html"></div>
+                     </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-xs-3 control-label">密码</label>
+                <div class="col-xs-9">
+                    <input type="password" ng-model="registerModel.password" class="form-control" id="password" name="password" placeholder="密码" required>
+                    <div ng-messages="frm.password.$error" role="alert">
+                        <div ng-messages-include="/src/directive/error-message/error-message.html"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="verifyPass" class="col-xs-3 control-label">确认密码</label>
+                <div class="col-xs-9">
+                    <input type="password" ng-model="verifyPass" class="form-control" id="verifyPass" name="verifyPass" placeholder="确认密码" required>
+                    <div ng-messages="frm.verifyPass.$error" role="alert">
+                        <div ng-messages-include="/src/directive/error-message/error-message.html"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-default btn-block">注册</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+

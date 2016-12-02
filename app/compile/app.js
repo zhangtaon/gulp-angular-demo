@@ -1,15 +1,10 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require("../src/app");
 require("../src/service/interceptor");
-require("../src/directive/tools");
-require("../src/directive/aside/aside");
-require("../src/directive/dom");
-require("../src/modules/main/main");
-require("../src/modules/login/login");
-require("../src/modules/test/test");
-require("../src/modules/about/about");
-
-},{"../src/app":2,"../src/directive/aside/aside":3,"../src/directive/dom":4,"../src/directive/tools":5,"../src/modules/about/about":6,"../src/modules/login/login":7,"../src/modules/main/main":8,"../src/modules/test/test":9,"../src/service/interceptor":10}],2:[function(require,module,exports){
+require("../src/serviceModule/browserify");
+require("../src/directive/browserify");
+require("../src/module/browserify");
+},{"../src/app":2,"../src/directive/browserify":4,"../src/module/browserify":8,"../src/service/interceptor":16,"../src/serviceModule/browserify":11}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -18,9 +13,9 @@ require("../src/modules/about/about");
  */
 angular.module("app", [
     "ui.router",
-    "app.login",
-    "app.main",
-    'tools'
+    'app.directive',
+    'app.serviceModule',
+    'app.module'
 ]).config([
     "$httpProvider",
     "$stateProvider",
@@ -52,8 +47,8 @@ angular.module("app", [
                     return;
                 }
 
-                // token无效 如果访问内部页就返回到登录页
-                if(!token && toState.name !='login'){
+                // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
+                if(!token && toState.name !='login' && toState.name !='register'){
                     event.preventDefault();
                     $state.go("login",{from:fromState.name,w:'notLogin'});
                     return;
@@ -118,7 +113,7 @@ angular.module("aside", [])
                 option: "="
             },
             replace: true,
-            templateUrl: 'src/directive/aside/aside.html'
+            templateUrl: '/src/directive/aside/aside.html'
         };
     })
     /**
@@ -181,6 +176,25 @@ angular.module("aside", [])
     ])
 ;
 },{}],4:[function(require,module,exports){
+"use strict";
+require("./directive");
+require("./aside/aside");
+require("./dom/dom");
+
+},{"./aside/aside":3,"./directive":5,"./dom/dom":6}],5:[function(require,module,exports){
+/**
+ * 工具模块
+ * Created by zto on 2016/11/25.
+ */
+
+"use strict";
+angular.module("app.directive", [
+    "ui.bootstrap",
+    "ngMessages",
+    "aside",
+    "dom"
+]);
+},{}],6:[function(require,module,exports){
 /**
  * dom指令
  * 以键值对的方式存储基于jqlite包装后的dom对象，
@@ -237,19 +251,7 @@ angular.module("dom", [])
         }]
     )
 ;
-},{}],5:[function(require,module,exports){
-/**
- * 工具模块
- * Created by zto on 2016/11/25.
- */
-
-"use strict";
-angular.module("tools", [
-    "ui.bootstrap",
-    "aside",
-    "dom"
-]);
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 /**
@@ -264,7 +266,7 @@ angular.module("app.about", ['ui.router'])
                 .state('main.about', {
                     url: "/about",
                     controller: 'aboutCtrl',
-                    templateUrl: 'src/modules/about/about.html'
+                    templateUrl: '/src/module/about/about.html'
                 });
 
             // Without server side support html5 must be disabled.
@@ -284,7 +286,70 @@ angular.module("app.about", ['ui.router'])
     }]
 );
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+/**
+ * 业务模块
+ * Created by zto on 2016/11/25.
+ */
+"use strict";
+require("./module");
+require("./about/about");
+require("./test/test");
+},{"./about/about":7,"./module":9,"./test/test":10}],9:[function(require,module,exports){
+/**
+ * Created by Administrator on 2016/12/1.
+ */
+"use strict";
+angular.module("app.module", [
+    "app.about",
+    "app.test"
+]);
+},{}],10:[function(require,module,exports){
+"use strict";
+
+/**
+ * Created by zto on 2016/10/20.
+ */
+angular.module("app.test", ['ui.router'])
+    .config([
+        "$stateProvider",
+        "$locationProvider",
+        "$urlRouterProvider",function ($stateProvider, $locationProvider) {
+            $stateProvider
+                .state('main.test', {
+                    url: "/test",
+                    controller: 'testCtrl',
+                    templateUrl: '/src/module/test/test.html'
+                });
+
+            // Without server side support html5 must be disabled.
+            $locationProvider.html5Mode(false);
+        }
+    ])
+    .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
+        $http({
+            url: "/demo2",
+            method: 'get',
+            params: {zto:10,cc:20,sn:30}
+        }).then(function (res) {
+            console.log("get:", res.data.data);
+        }, function (res) {
+            console.log("post:", res);
+        });
+    }]
+);
+
+},{}],11:[function(require,module,exports){
+/**
+ * 非业务功能模块
+ * Created by zto on 2016/11/25.
+ */
+"use strict";
+require("./serviceModule");
+require("./main/main");
+require("./login/login");
+require("./register/register");
+},{"./login/login":12,"./main/main":13,"./register/register":14,"./serviceModule":15}],12:[function(require,module,exports){
 "use strict";
 
 /**
@@ -296,26 +361,39 @@ angular.module("app.login", ['ui.router'])
         "$stateProvider",
         "$locationProvider",
         "$urlRouterProvider",
-        function ($stateProvider, $locationProvider) {
+        function ($stateProvider) {
             $stateProvider
                 .state('login', {
                     url: "/login",
                     controller: 'loginCtrl',
-                    templateUrl: 'src/modules/login/login.html'
+                    templateUrl: '/src/serviceModule/login/login.html'
                 });
-
-            // Without server side support html5 must be disabled.
-            $locationProvider.html5Mode(false);
         }
     ])
     .controller("loginCtrl", [
         "$scope",
         "$rootScope",
         "_loginService",
-        function ($scope, $rootScope, _loginService) {
-            $scope.login = function () {
-                _loginService.login();
+        "$state",
+        function ($scope, $rootScope, _loginService, $state) {
+
+            $scope.$watch("loginModel.account",function(){
+                $scope.logined = true;
+            });
+            $scope.$watch("loginModel.password",function(){
+                $scope.logined = true;
+            });
+
+            $scope.login = function (valid) {
+                $scope.submitted = true;
+                valid && _loginService.login($scope.loginModel,function(){
+                    $scope.logined = false;//登录错误信息显示控制
+                }); // jshint ignore:line
             };
+            $scope.register = function () {
+                $state.go("register");
+            };
+
         }
     ])
     .factory("_loginService",[
@@ -325,18 +403,22 @@ angular.module("app.login", ['ui.router'])
         "$rootScope",
         function($http,_aside,$state,$rootScope){
             return {
-                login: function(){
-                    $http.post("/login").success(function (res) {
-                        sessionStorage.setItem("userinfo", JSON.stringify(res.data));
-                        $rootScope.userinfo = res.data;
-                        _aside.init(res.data.role);
-                        $state.go("main");
+                login: function(model,call){
+                    $http.post("/login",model).then(function (res) {
+                        if(res.data.error.returnCode == 200){
+                            sessionStorage.setItem("userinfo", JSON.stringify(res.data));
+                            $rootScope.userinfo = res.data;
+                            _aside.init(res.data.role);
+                            $state.go("main");
+                        }else{
+                            call();
+                        }
                     });
                 }
             };
         }])
 ;
-},{}],8:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 /**
@@ -356,7 +438,7 @@ angular.module("app.main", [
                 .state('main', {
                     url: "/main",
                     controller: 'mainCtrl',
-                    templateUrl: 'src/modules/main/main.html',
+                    templateUrl: 'src/serviceModule/main/main.html',
                     resolve: {
                         menus: ["_aside",function(_aside){
                             return _aside.data;
@@ -385,42 +467,64 @@ angular.module("app.main", [
     ])
 ;
 
-},{}],9:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 /**
- * Created by zto on 2016/10/20.
+ * 注册模块
+ * Created by zto on 2016/12/2.
  */
-angular.module("app.test", ['ui.router'])
+angular.module("app.register", ['ui.router'])
     .config([
         "$stateProvider",
         "$locationProvider",
-        "$urlRouterProvider",function ($stateProvider, $locationProvider) {
+        "$urlRouterProvider",
+        function ($stateProvider) {
             $stateProvider
-                .state('main.test', {
-                    url: "/test",
-                    controller: 'testCtrl',
-                    templateUrl: 'src/modules/test/test.html'
+                .state('register', {
+                    url: "/register",
+                    controller: 'registerCtrl',
+                    templateUrl: '/src/serviceModule/register/register.html'
                 });
-
-            // Without server side support html5 must be disabled.
-            $locationProvider.html5Mode(false);
         }
     ])
-    .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
-        $http({
-            url: "/demo2",
-            method: 'get',
-            params: {zto:10,cc:20,sn:30}
-        }).then(function (res) {
-            console.log("get:", res.data.data);
-        }, function (res) {
-            console.log("post:", res);
-        });
-    }]
-);
-
-},{}],10:[function(require,module,exports){
+    .controller("registerCtrl", [
+        "$scope",
+        "$rootScope",
+        "_registerService",
+        function ($scope, $rootScope, _registerService) {
+            $scope.register = function (valid) {
+                $scope.submitted = true;
+                valid && _registerService.register($scope.registerModel);// jshint ignore:line
+            };
+        }
+    ])
+    .factory("_registerService",[
+        "$http",
+        function($http){
+            return {
+                register: function(data){
+                    $http.post("/register",data).then(function (res) {
+                        if(res.data.error.returnCode == 200){
+                            console.log("ok res:",res.data.error.returnMessage);
+                        }
+                    });
+                }
+            };
+        }])
+;
+},{}],15:[function(require,module,exports){
+/**
+ * 非业务功能模块
+ * Created by Administrator on 2016/12/1.
+ */
+"use strict";
+angular.module("app.serviceModule", [
+    "app.login",
+    "app.register",
+    "app.main"
+]);
+},{}],16:[function(require,module,exports){
 "use strict";
 
 /**
@@ -441,7 +545,7 @@ angular.module("app")
                     return config;
                 },
                 response: function (resp) {
-                    if (resp.config.url == '/login') {
+                    if (resp.config.url == '/login' && resp.data.error.returnCode==200) {
                         sessionStorage.setItem("token", resp.config.headers.token || resp.data.token);
                     }
                     return resp;

@@ -1,0 +1,37 @@
+.login {
+  width: 400px;
+  height: 313px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  padding: 20px 40px;
+  background-color: mediumspringgreen;
+  border-radius: 3px;
+}
+.error-tip {
+  margin-bottom: 48px;
+}
+.alert {
+  padding: 3px 15px;
+  margin-bottom: 15px;
+}
+.alert-wrap {
+  display: none;
+  position: relative;
+  .alert {
+    position: absolute;
+  }
+}
+.form-invalid {
+  .alert-wrap.error {
+    display: block;
+  }
+}
+.form-valid {
+  .alert-wrap.ok {
+    display: block;
+  }
+}

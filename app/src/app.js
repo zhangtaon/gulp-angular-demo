@@ -6,9 +6,9 @@
  */
 angular.module("app", [
     "ui.router",
-    "app.login",
-    "app.main",
-    'tools'
+    'app.directive',
+    'app.serviceModule',
+    'app.module'
 ]).config([
     "$httpProvider",
     "$stateProvider",
@@ -40,8 +40,8 @@ angular.module("app", [
                     return;
                 }
 
-                // token无效 如果访问内部页就返回到登录页
-                if(!token && toState.name !='login'){
+                // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
+                if(!token && toState.name !='login' && toState.name !='register'){
                     event.preventDefault();
                     $state.go("login",{from:fromState.name,w:'notLogin'});
                     return;
