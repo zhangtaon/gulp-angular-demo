@@ -1,0 +1,14 @@
+<header class="clearfix" ng-controller="HeaderCtrl">
+    <div class="media">
+        <div class="media-left"><a ui-sref="main"><img src="/image/logo.png"/></a></div>
+        <div class="media-body media-middle">运营数据平台</div>
+        <div class="media-right media-middle">
+            <div class="clearfix pull-right" ng-show="userinfo">
+                <span class="username">
+                    {{userinfo.username}}
+                </span>
+                <span class="logout" ng-click="logout();">退出</span>
+            </div>
+        </div>
+    </div>
+</header>

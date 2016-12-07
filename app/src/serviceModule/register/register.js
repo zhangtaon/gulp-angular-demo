@@ -4,7 +4,7 @@
  * 注册模块
  * Created by zto on 2016/12/2.
  */
-angular.module("app.register", ['ui.router'])
+angular.module("app.register", [])
     .config([
         "$stateProvider",
         "$locationProvider",

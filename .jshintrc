@@ -3,7 +3,8 @@
   "globals": {
     "angular": false,
     "sessionStorage": false,
-    "require": false
+    "require": false,
+    "window": false
   },
   "noempty":true,
   "nonew": true,

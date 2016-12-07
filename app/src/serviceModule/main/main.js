@@ -32,7 +32,6 @@ angular.module("app.main", [
         "menus",
         "_dom",
         function ($scope,$http,menus,_dom) {
-
             //初始化侧边栏
             $scope.asideOption = {
                 //侧边栏所需数据

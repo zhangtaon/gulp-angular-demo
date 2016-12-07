@@ -1,0 +1,15 @@
+{
+	"error":{
+		"returnCode": 0,
+    	"returnMessage": "ok",
+    	"returnUserMessage": "ok"
+  	},
+  	"data": {
+	    "id": "1",
+	    "user_name": "测试用户",
+	    "password": "123",
+	    "email": "avg@163.com",
+	    "phone": "18101229056",
+	    "role_ids": [1,2,3]
+  	}
+}

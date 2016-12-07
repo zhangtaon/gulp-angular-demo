@@ -69,7 +69,7 @@ angular.module("aside", [])
                 },
                 //菜单存储对象
                 data: null,
-                //验证是否有权限
+                //验证是否有权限去访问菜单对应的页面
                 hasRole: function(stateName){
                     var defer = $q.defer(),hasAuth;
                     if(this.data){

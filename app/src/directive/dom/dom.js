@@ -67,7 +67,9 @@ angular.module("dom", [])
             restrict: 'A',
             require: '?ngModel',
             link: function(scope, elm, attr, ctrl) {
-                if (!ctrl) return;
+                if (!ctrl) {
+                    return;
+                }
                 var bindVal;
                 attr.$observe('bindVerify', function(value) {
                     bindVal = value;

@@ -1,0 +1,18 @@
+{
+  "error": 
+  {
+    "returnCode": 0,
+    "returnMessage": "OK",
+    "returnUserMessage": "OK"
+  },
+  "data":
+    {
+        "id":1,
+        "name" :"子菜单一",
+        "parent":"菜单一",
+        "parentId":"1",
+        "route_ids" : "1,4,6",
+        "ext" :"自定义路由数据"
+    }
+  
+}

@@ -4,7 +4,7 @@ require("../src/service/interceptor");
 require("../src/serviceModule/browserify");
 require("../src/directive/browserify");
 require("../src/module/browserify");
-},{"../src/app":2,"../src/directive/browserify":4,"../src/module/browserify":8,"../src/service/interceptor":16,"../src/serviceModule/browserify":11}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/browserify":4,"../src/module/browserify":8,"../src/service/interceptor":17,"../src/serviceModule/browserify":11}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -40,32 +40,30 @@ angular.module("app", [
 
                 var token = sessionStorage.getItem("token");
 
-                //token有效 如果是请求登录页就返回main页面
-                if(toState.name =='login' && token){
-                    event.preventDefault();
-                    $state.go("main");
-                    return;
-                }
-
-                // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
-                if(!token && toState.name !='login' && toState.name !='register'){
-                    event.preventDefault();
-                    $state.go("login",{from:fromState.name,w:'notLogin'});
-                    return;
-                }
-
-                //略过main 注：main不在验证路由有效性的范围
-                if(toState.name === "main"){
-                    return;
-                }
-
-                //除以上情况外，所有路由都要验证有效性
-                _aside.hasRole(toState.name).then(function(auth){
-                    if(!auth){
+                //token有效
+                if(token){
+                    if(toState.name =='login'){
                         event.preventDefault();
                         $state.go("main");
+                    } else if(toState.name === "main"){
+                        //略过main 注：main不在验证路由有效性的范围
+                        return;
+                    } else {
+                        //除以上情况外，所有路由都要验证有效性
+                        _aside.hasRole(toState.name).then(function(auth){
+                            if(!auth){
+                                event.preventDefault();
+                                $state.go("main");
+                            }
+                        });
                     }
-                });
+                }else{
+                    // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
+                    if(toState.name !='login' && toState.name !='register'){
+                        event.preventDefault();
+                        $state.go("login",{from:fromState.name,w:'notLogin'});
+                    }
+                }
 
             });
         }
@@ -142,7 +140,7 @@ angular.module("aside", [])
                 },
                 //菜单存储对象
                 data: null,
-                //验证是否有权限
+                //验证是否有权限去访问菜单对应的页面
                 hasRole: function(stateName){
                     var defer = $q.defer(),hasAuth;
                     if(this.data){
@@ -264,7 +262,9 @@ angular.module("dom", [])
             restrict: 'A',
             require: '?ngModel',
             link: function(scope, elm, attr, ctrl) {
-                if (!ctrl) return;
+                if (!ctrl) {
+                    return;
+                }
                 var bindVal;
                 attr.$observe('bindVerify', function(value) {
                     bindVal = value;
@@ -283,7 +283,7 @@ angular.module("dom", [])
 /**
  * Created by zto on 2016/10/20.
  */
-angular.module("app.about", ['ui.router'])
+angular.module("app.about", [])
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -336,7 +336,7 @@ angular.module("app.module", [
 /**
  * Created by zto on 2016/10/20.
  */
-angular.module("app.test", ['ui.router'])
+angular.module("app.test", [])
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -366,23 +366,48 @@ angular.module("app.test", ['ui.router'])
 );
 
 },{}],11:[function(require,module,exports){
+"use strict";
+
 /**
  * 非业务功能模块
  * Created by zto on 2016/11/25.
  */
-"use strict";
 require("./serviceModule");
 require("./main/main");
 require("./login/login");
 require("./register/register");
-},{"./login/login":12,"./main/main":13,"./register/register":14,"./serviceModule":15}],12:[function(require,module,exports){
+require("./header/header");
+},{"./header/header":12,"./login/login":13,"./main/main":14,"./register/register":15,"./serviceModule":16}],12:[function(require,module,exports){
+'use strict';
+
+angular.module('app.header', [])
+
+.controller('HeaderCtrl', [
+        '$scope',
+        '_loginService',
+        function($scope,_loginService) {
+            $scope.userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+
+            $scope.logout = function(){
+              _loginService.logout().then(function(){
+                  $scope.userinfo = null;
+              });
+            };
+
+            $scope.$on('login', function() {
+                $scope.userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
+            });
+        }]
+    );
+
+},{}],13:[function(require,module,exports){
 "use strict";
 
 /**
  * 登录模块
  * Created by zto on 2016/10/20.
  */
-angular.module("app.login", ['ui.router'])
+angular.module("app.login", [])
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -403,6 +428,9 @@ angular.module("app.login", ['ui.router'])
         "$state",
         function ($scope, $rootScope, _loginService, $state) {
 
+            /**
+             * 监听变量 发生变化重置 logined 状态
+             */
             $scope.$watch("loginModel.account",function(){
                 $scope.logined = true;
             });
@@ -410,16 +438,33 @@ angular.module("app.login", ['ui.router'])
                 $scope.logined = true;
             });
 
+            /**
+             * 登录
+             * @param valid 表单验证结果 true 验证通过，false 验证未通过
+             */
             $scope.login = function (valid) {
                 $scope.submitted = true;
-                valid && _loginService.login($scope.loginModel,function(){
-                    $scope.logined = false;//登录错误信息显示控制
-                }); // jshint ignore:line
+
+                //表单验证通过，登录系统
+                valid && _loginService.login($scope.loginModel).then(function(){
+
+                    //登录成功 从根作用域发射事件
+                    $rootScope.$broadcast('login');
+
+                },function(){
+
+                    //登录失败，控制错误信息显示
+                    $scope.logined = false;
+
+                });// jshint ignore:line
             };
+
+            /**
+             * 跳转注册页
+             */
             $scope.register = function () {
                 $state.go("register");
             };
-
         }
     ])
     .factory("_loginService",[
@@ -427,24 +472,53 @@ angular.module("app.login", ['ui.router'])
         "_aside",
         "$state",
         "$rootScope",
-        function($http,_aside,$state,$rootScope){
+        "$log",
+        "$q",
+        function($http,_aside,$state,$rootScope,$log,$q){
             return {
-                login: function(model,call){
+                /**
+                 * 登录
+                 * @param model 登录数据封装
+                 * @returns {defer.promise|*}
+                 */
+                login: function(model){
+                    var defer = $q.defer();
                     $http.post("/login",model).then(function (res) {
                         if(res.data.error.returnCode == 200){
-                            sessionStorage.setItem("userinfo", JSON.stringify(res.data));
-                            $rootScope.userinfo = res.data;
-                            _aside.init(res.data.role);
+                            sessionStorage.setItem("userinfo", JSON.stringify(res.data.data));
+                            $rootScope.userinfo = res.data.data;
+                            _aside.init(res.data.data.role);
                             $state.go("main");
+                            defer.resolve();
                         }else{
-                            call();
+                            defer.reject();
                         }
                     });
+                    return defer.promise;
+                },
+                /**
+                 * 退出
+                 */
+                logout: function(){
+                    var defer = $q.defer();
+                    $http.post("/logout").then(function (res) {
+                        if(res.data.error.returnCode == 200){
+                            sessionStorage.removeItem("token");
+                            sessionStorage.removeItem("userinfo");
+                            $rootScope.userinfo = null;
+                            $state.go("login");
+                            defer.resolve();
+                        }else{
+                            defer.reject();
+                            $log.warn("退出失败");
+                        }
+                    });
+                    return defer.promise;
                 }
             };
         }])
 ;
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 /**
@@ -479,7 +553,6 @@ angular.module("app.main", [
         "menus",
         "_dom",
         function ($scope,$http,menus,_dom) {
-
             //初始化侧边栏
             $scope.asideOption = {
                 //侧边栏所需数据
@@ -493,14 +566,14 @@ angular.module("app.main", [
     ])
 ;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 /**
  * 注册模块
  * Created by zto on 2016/12/2.
  */
-angular.module("app.register", ['ui.router'])
+angular.module("app.register", [])
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -539,18 +612,19 @@ angular.module("app.register", ['ui.router'])
             };
         }])
 ;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
  * 非业务功能模块
  * Created by Administrator on 2016/12/1.
  */
 "use strict";
 angular.module("app.serviceModule", [
+    "app.header",
     "app.login",
     "app.register",
     "app.main"
 ]);
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 /**

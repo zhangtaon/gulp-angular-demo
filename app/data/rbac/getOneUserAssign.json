@@ -1,0 +1,15 @@
+{
+  "error": 
+  {
+    "returnCode": 0,
+    "returnMessage": "OK",
+    "returnUserMessage": "OK"
+  },
+  "data":
+  	{
+      "user_name": "luds",
+      "role_ids": "1",
+      "role_names":"hhhhhhhh"
+    }
+
+}

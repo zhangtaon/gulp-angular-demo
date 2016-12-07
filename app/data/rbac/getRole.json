@@ -1,0 +1,12 @@
+{
+	"error":{
+		"returnCode": 0,
+    	"returnMessage": "ok",
+    	"returnUserMessage": "ok"
+  	},
+  	"data": {
+	    "id": "1",
+	    "name": "测试用户",
+	    "perm_ids": ["1025","1027","1028"]
+  	}
+}

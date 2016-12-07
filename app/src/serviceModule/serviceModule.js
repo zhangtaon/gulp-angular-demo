@@ -4,6 +4,7 @@
  */
 "use strict";
 angular.module("app.serviceModule", [
+    "app.header",
     "app.login",
     "app.register",
     "app.main"

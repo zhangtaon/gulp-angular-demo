@@ -1,0 +1,15 @@
+{
+	"error":{
+		"returnCode":0,
+		"returnMessage":"OK",
+		"returnUserMessage":"OK"
+	},
+	"data":[
+			{"id":"1","name":"普通用户"},
+			{"id":"2","name":"初级运营"},
+			{"id":"3","name":"高级运营"},
+			{"id":"4","name":"管理员"},
+			{"id":"5","name":"员工"},
+			{"id":"6","name":"中级运营"}
+	]
+}

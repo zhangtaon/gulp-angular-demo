@@ -1,0 +1,26 @@
+{
+  "error": {
+    "returnCode": 0,
+    "returnMessage": "ok",
+    "returnUserMessage": "ok"
+  },
+  "data": {
+    "operateUsersList": [
+		{
+			"index": "2",
+			"name" : "北京30天未上线",
+			"marklist" : "性别男；高学历；投资用户；标签标签标签标签；标签标签标签标签；投资用户",
+			"userNum" : "23839",
+			"createTime" : "2016-08-02 15:54"
+		},{
+			"index": "1",
+			"name" : "支行行长",
+			"marklist" : "性别男；高学历；投资用户；标签标签标签标签；标签标签标签标签；投资用户",
+			"userNum" : "23810",
+			"createTime" : "2016-08-02 15:58"
+		}
+    ],
+	  "dataCount" : 200,
+	  "pageCount" : 20
+  }
+}

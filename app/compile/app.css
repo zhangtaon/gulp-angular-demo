@@ -11219,18 +11219,6 @@ a {
   width: 100%;
 }
 
-header {
-  position: fixed;
-  padding: 20px 0;
-  width: 100%;
-  background-color: #fff;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  border-bottom: 1px solid #e9e9e9;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
 footer {
   position: relative;
   padding: 20px 0;
@@ -11419,4 +11407,47 @@ footer {
   background: #f7f7f7;
   min-height: 900px;
   padding: 20px;
+}
+
+header {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #cdcdcd;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  color: #666;
+}
+
+header .media {
+  padding: 15px 15px 15px 25px;
+}
+
+header .media-body:before,
+header .logout:before {
+  position: relative;
+  top: 4px;
+  content: '';
+  height: 20px;
+  width: 1px;
+  background-color: #b3b3b3;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+header .media-right {
+  font-size: 14px;
+  width: 20%;
+}
+
+header .media-right .logout {
+  cursor: pointer;
+}
+
+header .media-right .username {
+  margin-right: 8px;
 }

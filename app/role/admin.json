@@ -11,23 +11,13 @@
             ]
         },
         {
-            "ref":"main.Home",
-            "title":"Home",
+            "ref":"main.rbac",
+            "title":"统一权限管理",
             "items": []
         },
         {
             "ref":"main.about",
             "title":"About",
-            "items": []
-        },
-        {
-            "ref":"main.Projects",
-            "title":"Projects",
-            "items": []
-        },
-        {
-            "ref":"main.Blog",
-            "title":"Blog",
             "items": []
         }
     ]

@@ -33,32 +33,30 @@ angular.module("app", [
 
                 var token = sessionStorage.getItem("token");
 
-                //token有效 如果是请求登录页就返回main页面
-                if(toState.name =='login' && token){
-                    event.preventDefault();
-                    $state.go("main");
-                    return;
-                }
-
-                // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
-                if(!token && toState.name !='login' && toState.name !='register'){
-                    event.preventDefault();
-                    $state.go("login",{from:fromState.name,w:'notLogin'});
-                    return;
-                }
-
-                //略过main 注：main不在验证路由有效性的范围
-                if(toState.name === "main"){
-                    return;
-                }
-
-                //除以上情况外，所有路由都要验证有效性
-                _aside.hasRole(toState.name).then(function(auth){
-                    if(!auth){
+                //token有效
+                if(token){
+                    if(toState.name =='login'){
                         event.preventDefault();
                         $state.go("main");
+                    } else if(toState.name === "main"){
+                        //略过main 注：main不在验证路由有效性的范围
+                        return;
+                    } else {
+                        //除以上情况外，所有路由都要验证有效性
+                        _aside.hasRole(toState.name).then(function(auth){
+                            if(!auth){
+                                event.preventDefault();
+                                $state.go("main");
+                            }
+                        });
                     }
-                });
+                }else{
+                    // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
+                    if(toState.name !='login' && toState.name !='register'){
+                        event.preventDefault();
+                        $state.go("login",{from:fromState.name,w:'notLogin'});
+                    }
+                }
 
             });
         }

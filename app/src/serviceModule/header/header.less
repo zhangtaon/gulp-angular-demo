@@ -1,0 +1,38 @@
+header {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #cdcdcd;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  color: #666;
+
+  .media {
+    padding: 15px 15px 15px 25px;
+  }
+  .media-body:before,
+  .logout:before {
+    position: relative;
+    top: 4px;
+    content: '';
+    height: 20px;
+    width: 1px;
+    background-color: #b3b3b3;
+    display: inline-block;
+    margin-right: 8px;
+  }
+  .media-right {
+    font-size: 14px;
+    width: 20%;
+    .logout {
+      cursor: pointer;
+    }
+    .username {
+      margin-right: 8px;
+    }
+  }
+}
