@@ -22,12 +22,13 @@ angular.module("app.test", [])
     .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
         $http({
             url: "/demo2",
-            method: 'get',
-            params: {zto:10,cc:20,sn:30}
+            method: 'put',
+            data: {zto:10,cc:20}
         }).then(function (res) {
-            console.log("get:", res.data.data);
+            console.log("post:", res.data.data);
         }, function (res) {
             console.log("post:", res);
         });
+        console.log("dddk");
     }]
 );
