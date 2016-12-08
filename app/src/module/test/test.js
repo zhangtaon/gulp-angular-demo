@@ -19,13 +19,13 @@ angular.module("app.test", [])
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
+    .controller("testCtrl", ["$scope","$http","_alert",function ($scope,$http,_alert) {
         $http({
             url: "/demo2",
             method: 'put',
             data: {zto:10,cc:20}
         }).then(function (res) {
-            console.log("post:", res.data.data);
+            _alert.show(res.data.error.returnMessage);
         }, function (res) {
             console.log("post:", res);
         });

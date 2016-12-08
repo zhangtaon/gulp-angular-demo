@@ -4,7 +4,7 @@ require("../src/service/interceptor");
 require("../src/serviceModule/browserify");
 require("../src/directive/browserify");
 require("../src/module/browserify");
-},{"../src/app":2,"../src/directive/browserify":4,"../src/module/browserify":8,"../src/service/interceptor":17,"../src/serviceModule/browserify":11}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/browserify":5,"../src/module/browserify":9,"../src/service/interceptor":18,"../src/serviceModule/browserify":12}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -69,6 +69,52 @@ angular.module("app", [
         }
     ]);
 },{}],3:[function(require,module,exports){
+"use strict";
+
+/**
+ * 异步请求信息提示框
+ *
+ * Created by zto on 2016/10/20.
+ */
+angular.module("alert", [])
+    .directive("alert", ["_alert",function (_alert) {
+        return{
+            restrict: "A",
+            scope: {},
+            replace: true,
+//            templateUrl: '<div class="warning">提示信息</div>',
+            template: '<div class="alert alert-danger warning-msg">提示信息</div>',
+            link: function ($scope,ele) {
+                _alert.domNode = ele;
+            }
+        };
+    }])
+    /**
+     * 如果用户已经登录，根据用户角色获取侧边栏数据
+     */
+    .factory("_alert",  ["$timeout",function ($timeout) {
+            /**
+             * 异步请求信息提示框
+             */
+            var alert = {
+                domNode: null,
+                status: false,
+                show:function (msg){
+                    var _this = this;
+                    this.status = true;
+                    this.domNode.css("top","60px");
+                    this.domNode.text(msg);
+                    $timeout(function(){
+                        _this.domNode.css("top","0px");
+                        _this.status = false;
+                    },2500);
+                }
+            };
+            return alert;
+        }]
+    )
+;
+},{}],4:[function(require,module,exports){
 /**
  * 侧边栏指令
  * option为指定的配置参数,他的值为绑定在所在模块控制器作用域上的属性
@@ -173,13 +219,14 @@ angular.module("aside", [])
         }
     ])
 ;
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 require("./directive");
 require("./aside/aside");
 require("./dom/dom");
+require("./alert/alert");
 
-},{"./aside/aside":3,"./directive":5,"./dom/dom":6}],5:[function(require,module,exports){
+},{"./alert/alert":3,"./aside/aside":4,"./directive":6,"./dom/dom":7}],6:[function(require,module,exports){
 /**
  * 工具模块
  * Created by zto on 2016/11/25.
@@ -189,10 +236,11 @@ require("./dom/dom");
 angular.module("app.directive", [
     "ui.bootstrap",
     "ngMessages",
+    "alert",
     "aside",
     "dom"
 ]);
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * dom指令
  * 以键值对的方式存储基于jqlite包装后的dom对象，
@@ -277,7 +325,7 @@ angular.module("dom", [])
         };
     }])
 ;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 /**
@@ -299,12 +347,13 @@ angular.module("app.about", [])
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("aboutCtrl", ["$scope","$http",function ($scope,$http) {
+    .controller("aboutCtrl", ["$scope","$http","_alert",function ($scope,$http,_alert) {
         $http({
             url: "/demo1",
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {
+            _alert.show("aboutCtrl get demo1 success");
             console.log("post:", res.data.data);
         }, function (res) {
             console.log("post:", res);
@@ -312,7 +361,7 @@ angular.module("app.about", [])
     }]
 );
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /**
  * 业务模块
  * Created by zto on 2016/11/25.
@@ -321,7 +370,7 @@ angular.module("app.about", [])
 require("./module");
 require("./about/about");
 require("./test/test");
-},{"./about/about":7,"./module":9,"./test/test":10}],9:[function(require,module,exports){
+},{"./about/about":8,"./module":10,"./test/test":11}],10:[function(require,module,exports){
 /**
  * Created by Administrator on 2016/12/1.
  */
@@ -330,7 +379,7 @@ angular.module("app.module", [
     "app.about",
     "app.test"
 ]);
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 /**
@@ -352,13 +401,13 @@ angular.module("app.test", [])
             $locationProvider.html5Mode(false);
         }
     ])
-    .controller("testCtrl", ["$scope","$http",function ($scope,$http) {
+    .controller("testCtrl", ["$scope","$http","_alert",function ($scope,$http,_alert) {
         $http({
             url: "/demo2",
             method: 'put',
             data: {zto:10,cc:20}
         }).then(function (res) {
-            console.log("post:", res.data.data);
+            _alert.show(res.data.error.returnMessage);
         }, function (res) {
             console.log("post:", res);
         });
@@ -366,7 +415,7 @@ angular.module("app.test", [])
     }]
 );
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 /**
@@ -378,7 +427,7 @@ require("./main/main");
 require("./login/login");
 require("./register/register");
 require("./header/header");
-},{"./header/header":12,"./login/login":13,"./main/main":14,"./register/register":15,"./serviceModule":16}],12:[function(require,module,exports){
+},{"./header/header":13,"./login/login":14,"./main/main":15,"./register/register":16,"./serviceModule":17}],13:[function(require,module,exports){
 'use strict';
 
 angular.module('app.header', [])
@@ -401,7 +450,7 @@ angular.module('app.header', [])
         }]
     );
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 /**
@@ -519,7 +568,7 @@ angular.module("app.login", [])
             };
         }])
 ;
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 /**
@@ -567,7 +616,7 @@ angular.module("app.main", [
     ])
 ;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 /**
@@ -613,7 +662,7 @@ angular.module("app.register", [])
             };
         }])
 ;
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * 非业务功能模块
  * Created by Administrator on 2016/12/1.
@@ -625,7 +674,7 @@ angular.module("app.serviceModule", [
     "app.register",
     "app.main"
 ]);
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 /**

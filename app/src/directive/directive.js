@@ -7,6 +7,7 @@
 angular.module("app.directive", [
     "ui.bootstrap",
     "ngMessages",
+    "alert",
     "aside",
     "dom"
 ]);

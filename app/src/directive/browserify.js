@@ -2,3 +2,4 @@
 require("./directive");
 require("./aside/aside");
 require("./dom/dom");
+require("./alert/alert");
