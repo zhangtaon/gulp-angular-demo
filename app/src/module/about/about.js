@@ -20,8 +20,10 @@ angular.module("app.about", [])
         }
     ])
     .controller("aboutCtrl", ["$scope","$http","_alert",function ($scope,$http,_alert) {
+
+
         $http({
-            url: "/demo1",
+            url: "/demo1/"+"rentinting"+"/name",
             method: 'get',
             params: {zto:10,cc:20,sn:30}
         }).then(function (res) {

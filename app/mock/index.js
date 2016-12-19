@@ -16,7 +16,7 @@ var conf = require('../../gulp/conf');
 module.exports = function (mockDir) {
     conf.setRoute(mockDir);
 
-    conf.routing("/demo1",'demo1.json');
+    conf.routing("/demo1/:title/name",'demo1.json');
     conf.routing("/demo2",'demo2.json');
     conf.routing("/login",'login.json');//登录
     conf.routing("/logout",'logout.json');//退出登录
