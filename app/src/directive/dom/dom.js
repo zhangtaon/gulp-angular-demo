@@ -27,7 +27,7 @@
  */
 
 "use strict";
-angular.module("dom", [])
+angular.module("app.directive")
     .directive("dom", ["_dom",function (_dom) {
         return {
             scope:{},
@@ -45,7 +45,7 @@ angular.module("dom", [])
             return {
                 set: function(key,ele){
                     if(_dom[key]){
-                        $log.error("dom指令使用失败，当前页面已存在dom-name为"+ key + "的节点，"+ "请重新指定dom-name的值");
+                        $log.error("dom指令使用失败，当前页面已存在dom-key为"+ key + "的节点，"+ "请重新指定dom-key的值");
                     }else {
                         _dom[key] = ele;
                     }

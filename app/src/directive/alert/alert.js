@@ -5,7 +5,7 @@
  *
  * Created by zto on 2016/10/20.
  */
-angular.module("alert", [])
+angular.module("app.directive")
     .directive("alert", ["_alert",function (_alert) {
         return{
             restrict: "A",

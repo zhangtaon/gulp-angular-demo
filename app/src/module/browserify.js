@@ -1,8 +1,9 @@
+"use strict";
 /**
  * 业务模块
  * Created by zto on 2016/11/25.
  */
-"use strict";
-require("./module");
+angular.module("app.module", []);
+
 require("./about/about");
 require("./test/test");

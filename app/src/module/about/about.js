@@ -3,7 +3,7 @@
 /**
  * Created by zto on 2016/10/20.
  */
-angular.module("app.about", [])
+angular.module("app.module")
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -21,7 +21,6 @@ angular.module("app.about", [])
     ])
     .controller("aboutCtrl", ["$scope","$http","_alert",function ($scope,$http,_alert) {
 
-
         $http({
             url: "/demo1/"+"rentinting"+"/name",
             method: 'get',
@@ -33,4 +32,5 @@ angular.module("app.about", [])
             console.log("post:", res);
         });
     }]
+
 );

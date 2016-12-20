@@ -6,10 +6,7 @@
  * 右：页面内容
  * Created by zto on 2016/10/20.
  */
-angular.module("app.main", [
-        'app.test',
-        'app.about'
-    ])
+angular.module("app.serviceModule")
     .config([
         "$stateProvider",
         function ($stateProvider) {

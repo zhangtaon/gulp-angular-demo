@@ -3,7 +3,7 @@
 /**
  * Created by zto on 2016/10/20.
  */
-angular.module("app.test", [])
+angular.module("app.module")
     .config([
         "$stateProvider",
         "$locationProvider",

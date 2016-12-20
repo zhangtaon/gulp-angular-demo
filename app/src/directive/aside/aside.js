@@ -32,7 +32,7 @@
  */
 
 "use strict";
-angular.module("aside", [])
+angular.module("app.directive")
     .directive("aside", function () {
         return{
             restrict: "A",

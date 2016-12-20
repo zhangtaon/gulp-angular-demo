@@ -4,7 +4,7 @@
  * 登录模块
  * Created by zto on 2016/10/20.
  */
-angular.module("app.login", [])
+angular.module("app.serviceModule")
     .config([
         "$stateProvider",
         "$locationProvider",

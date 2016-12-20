@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('app.header', [])
+//angular.module('app.header', [])
+angular.module('app.serviceModule')
 
 .controller('HeaderCtrl', [
         '$scope',

@@ -4,7 +4,7 @@ require("../src/service/interceptor");
 require("../src/serviceModule/browserify");
 require("../src/directive/browserify");
 require("../src/module/browserify");
-},{"../src/app":2,"../src/directive/browserify":5,"../src/module/browserify":9,"../src/service/interceptor":18,"../src/serviceModule/browserify":12}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/browserify":5,"../src/module/browserify":8,"../src/service/interceptor":15,"../src/serviceModule/browserify":10}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -76,7 +76,7 @@ angular.module("app", [
  *
  * Created by zto on 2016/10/20.
  */
-angular.module("alert", [])
+angular.module("app.directive")
     .directive("alert", ["_alert",function (_alert) {
         return{
             restrict: "A",
@@ -149,7 +149,7 @@ angular.module("alert", [])
  */
 
 "use strict";
-angular.module("aside", [])
+angular.module("app.directive")
     .directive("aside", function () {
         return{
             restrict: "A",
@@ -221,26 +221,21 @@ angular.module("aside", [])
 ;
 },{}],5:[function(require,module,exports){
 "use strict";
-require("./directive");
-require("./aside/aside");
-require("./dom/dom");
-require("./alert/alert");
 
-},{"./alert/alert":3,"./aside/aside":4,"./directive":6,"./dom/dom":7}],6:[function(require,module,exports){
 /**
  * 工具模块
  * Created by zto on 2016/11/25.
  */
-
-"use strict";
 angular.module("app.directive", [
     "ui.bootstrap",
-    "ngMessages",
-    "alert",
-    "aside",
-    "dom"
+    "ngMessages"
 ]);
-},{}],7:[function(require,module,exports){
+
+require("./aside/aside");
+require("./dom/dom");
+require("./alert/alert");
+
+},{"./alert/alert":3,"./aside/aside":4,"./dom/dom":6}],6:[function(require,module,exports){
 /**
  * dom指令
  * 以键值对的方式存储基于jqlite包装后的dom对象，
@@ -270,7 +265,7 @@ angular.module("app.directive", [
  */
 
 "use strict";
-angular.module("dom", [])
+angular.module("app.directive")
     .directive("dom", ["_dom",function (_dom) {
         return {
             scope:{},
@@ -288,7 +283,7 @@ angular.module("dom", [])
             return {
                 set: function(key,ele){
                     if(_dom[key]){
-                        $log.error("dom指令使用失败，当前页面已存在dom-name为"+ key + "的节点，"+ "请重新指定dom-name的值");
+                        $log.error("dom指令使用失败，当前页面已存在dom-key为"+ key + "的节点，"+ "请重新指定dom-key的值");
                     }else {
                         _dom[key] = ele;
                     }
@@ -325,13 +320,13 @@ angular.module("dom", [])
         };
     }])
 ;
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 /**
  * Created by zto on 2016/10/20.
  */
-angular.module("app.about", [])
+angular.module("app.module")
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -349,7 +344,6 @@ angular.module("app.about", [])
     ])
     .controller("aboutCtrl", ["$scope","$http","_alert",function ($scope,$http,_alert) {
 
-
         $http({
             url: "/demo1/"+"rentinting"+"/name",
             method: 'get',
@@ -361,33 +355,26 @@ angular.module("app.about", [])
             console.log("post:", res);
         });
     }]
+
 );
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+"use strict";
 /**
  * 业务模块
  * Created by zto on 2016/11/25.
  */
-"use strict";
-require("./module");
+angular.module("app.module", []);
+
 require("./about/about");
 require("./test/test");
-},{"./about/about":8,"./module":10,"./test/test":11}],10:[function(require,module,exports){
-/**
- * Created by Administrator on 2016/12/1.
- */
-"use strict";
-angular.module("app.module", [
-    "app.about",
-    "app.test"
-]);
-},{}],11:[function(require,module,exports){
+},{"./about/about":7,"./test/test":9}],9:[function(require,module,exports){
 "use strict";
 
 /**
  * Created by zto on 2016/10/20.
  */
-angular.module("app.test", [])
+angular.module("app.module")
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -417,22 +404,27 @@ angular.module("app.test", [])
     }]
 );
 
-},{}],12:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
+/**
+ * 非业务功能模块
+ * Created by Administrator on 2016/12/1.
+ */
+angular.module("app.serviceModule", []);
 
 /**
  * 非业务功能模块
  * Created by zto on 2016/11/25.
  */
-require("./serviceModule");
 require("./main/main");
 require("./login/login");
 require("./register/register");
 require("./header/header");
-},{"./header/header":13,"./login/login":14,"./main/main":15,"./register/register":16,"./serviceModule":17}],13:[function(require,module,exports){
+},{"./header/header":11,"./login/login":12,"./main/main":13,"./register/register":14}],11:[function(require,module,exports){
 'use strict';
 
-angular.module('app.header', [])
+//angular.module('app.header', [])
+angular.module('app.serviceModule')
 
 .controller('HeaderCtrl', [
         '$scope',
@@ -452,14 +444,14 @@ angular.module('app.header', [])
         }]
     );
 
-},{}],14:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 /**
  * 登录模块
  * Created by zto on 2016/10/20.
  */
-angular.module("app.login", [])
+angular.module("app.serviceModule")
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -570,7 +562,7 @@ angular.module("app.login", [])
             };
         }])
 ;
-},{}],15:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 /**
@@ -579,10 +571,7 @@ angular.module("app.login", [])
  * 右：页面内容
  * Created by zto on 2016/10/20.
  */
-angular.module("app.main", [
-        'app.test',
-        'app.about'
-    ])
+angular.module("app.serviceModule")
     .config([
         "$stateProvider",
         function ($stateProvider) {
@@ -618,14 +607,14 @@ angular.module("app.main", [
     ])
 ;
 
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 /**
  * 注册模块
  * Created by zto on 2016/12/2.
  */
-angular.module("app.register", [])
+angular.module("app.serviceModule")
     .config([
         "$stateProvider",
         "$locationProvider",
@@ -664,19 +653,7 @@ angular.module("app.register", [])
             };
         }])
 ;
-},{}],17:[function(require,module,exports){
-/**
- * 非业务功能模块
- * Created by Administrator on 2016/12/1.
- */
-"use strict";
-angular.module("app.serviceModule", [
-    "app.header",
-    "app.login",
-    "app.register",
-    "app.main"
-]);
-},{}],18:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 /**
