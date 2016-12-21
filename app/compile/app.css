@@ -11479,3 +11479,126 @@ header .media-right .logout {
 header .media-right .username {
   margin-right: 8px;
 }
+
+#footer {
+  background-color: #28282c;
+}
+
+#footer .about-us {
+  margin: 0;
+  height: 133px;
+  line-height: 153px;
+  font-size: 30px;
+  text-align: center;
+  color: #b0b0b0;
+}
+
+#footer .links {
+  text-align: center;
+  margin-bottom: 55px;
+}
+
+#footer .links .link {
+  color: #b0b0b0;
+  margin-left: 60px;
+}
+
+#footer .links .link[href] {
+  cursor: pointer;
+}
+
+#footer .links .link:first-child {
+  margin-left: 0;
+}
+
+#footer .links .link .link-icon {
+  display: inline-block;
+  width: 39px;
+  height: 39px;
+  margin-right: 10px;
+}
+
+#footer .links .link .link-icon img {
+  width: 100%;
+}
+
+#footer .links .link .link-title {
+  text-decoration: underline;
+}
+
+#footer .line {
+  width: 1000px;
+  margin: 0 auto;
+  border-bottom: 1px solid #313135;
+  box-shadow: 1px 1px 0 #1d1d21;
+}
+
+#footer .footer-desc {
+  text-align: center;
+  color: #b0b0b0;
+  font-size: 12px;
+}
+
+#footer .footer-desc > li {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 23px;
+  margin: 20px 0 25px;
+  position: relative;
+}
+
+#footer .footer-desc > li:before {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  content: '';
+  height: 29px;
+  width: 1px;
+  background-color: #212125;
+  box-shadow: 1px 1px 0 #2f2f33;
+}
+
+#footer .footer-desc > li .contact {
+  text-align: left;
+}
+
+#footer .footer-desc > li .contact .contact-icon {
+  display: inline-block;
+  width: 12px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#footer .footer-desc > li .contact .contact-icon img {
+  width: 100%;
+}
+
+#footer .footer-desc > li .grade .hover {
+  display: none;
+}
+
+#footer .footer-desc > li .grade:hover .no-hover {
+  display: none;
+}
+
+#footer .footer-desc > li .grade:hover .hover {
+  display: block;
+}
+
+#footer .footer-desc > li .grade img {
+  width: 88px;
+}
+
+#footer .footer-desc > li .trust {
+  text-align: left;
+}
+
+.is-signed-in #footer {
+  min-width: 1120px;
+}
+
+.is-signed-in #footer .about-us,
+.is-signed-in #footer .links,
+.is-signed-in #footer .line {
+  display: none;
+}

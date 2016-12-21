@@ -4,7 +4,7 @@ require("../src/service/interceptor");
 require("../src/serviceModule/browserify");
 require("../src/directive/browserify");
 require("../src/module/browserify");
-},{"../src/app":2,"../src/directive/browserify":5,"../src/module/browserify":8,"../src/service/interceptor":15,"../src/serviceModule/browserify":10}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/browserify":5,"../src/module/browserify":8,"../src/service/interceptor":16,"../src/serviceModule/browserify":10}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -420,10 +420,24 @@ require("./main/main");
 require("./login/login");
 require("./register/register");
 require("./header/header");
-},{"./header/header":11,"./login/login":12,"./main/main":13,"./register/register":14}],11:[function(require,module,exports){
+require("./footer/footer");
+},{"./footer/footer":11,"./header/header":12,"./login/login":13,"./main/main":14,"./register/register":15}],11:[function(require,module,exports){
 'use strict';
 
-//angular.module('app.header', [])
+angular.module('app.serviceModule')
+
+.controller('FooterCtrl', [
+        '$scope',
+        function($scope) {
+            $scope.$on('login', function() {
+                $scope.logined = true;
+            });
+        }]
+    );
+
+},{}],12:[function(require,module,exports){
+'use strict';
+
 angular.module('app.serviceModule')
 
 .controller('HeaderCtrl', [
@@ -444,7 +458,7 @@ angular.module('app.serviceModule')
         }]
     );
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 /**
@@ -562,7 +576,7 @@ angular.module("app.serviceModule")
             };
         }])
 ;
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 /**
@@ -607,7 +621,7 @@ angular.module("app.serviceModule")
     ])
 ;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 /**
@@ -653,7 +667,7 @@ angular.module("app.serviceModule")
             };
         }])
 ;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 /**

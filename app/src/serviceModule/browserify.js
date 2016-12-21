@@ -13,3 +13,4 @@ require("./main/main");
 require("./login/login");
 require("./register/register");
 require("./header/header");
+require("./footer/footer");
