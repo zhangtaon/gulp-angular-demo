@@ -6,4 +6,6 @@ node_modules/
 dist
 .DS_Store
 .idea
-fontawesome*
+app/fonts/fontawesome*
+npm-debug.log
+debug.log

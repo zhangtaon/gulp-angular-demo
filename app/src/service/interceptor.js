@@ -14,6 +14,7 @@ angular.module("app")
         function ($q,$rootScope,$log,$location) {
             return {
                 request: function (config) {
+//                    X-Requested-With:XMLHttpRequest
                     config.headers.token = sessionStorage.getItem("token");
                     return config;
                 },
