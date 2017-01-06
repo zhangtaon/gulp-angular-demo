@@ -1,0 +1,66 @@
+{
+    "error": {
+        "returnCode": 0,
+        "returnMessage": "success",
+        "returnUserMessage": "success"
+    },
+    "data": [
+        {
+            "id":"0",
+            "name":"用户信息",
+            "url":"profile"
+        },
+        {
+            "id":"1",
+            "name":"工单管理",
+            "url":"test",
+            "children": [
+                {
+                    "url":"test",
+                    "name":"test1"
+                }
+            ]
+        },
+        {
+            "url":"about",
+            "name":"About",
+            "children": []
+        },
+        {
+            "id": "2",
+            "name": "用户映射",
+            "url": "/ticket/index",
+            "children": [
+                {
+                    "id":"3",
+                    "name":"test二级菜单",
+                    "url":"/ticket/test",
+                    "children": [
+                        {
+                            "id":"4",
+                            "name":"用户信息1三级菜单",
+                            "url":"profile1"
+                        },
+                        {
+                            "id":"5",
+                            "name":"工单管理1三级菜单",
+                            "url":"/ticket/index1",
+                            "children": [
+                                {
+                                    "id":"4",
+                                    "name":"用户信息1四级菜单",
+                                    "url":"profile1"
+                                },
+                                {
+                                    "id":"5",
+                                    "name":"工单管理1四级菜单",
+                                    "url":"/ticket/index1"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

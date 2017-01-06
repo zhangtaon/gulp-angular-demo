@@ -26,38 +26,17 @@ angular.module("app", [
         "_dom",
         function($rootScope,$state,_aside,_dom){
 
-            $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState){
-                
+            $rootScope.$on('$stateChangeStart',function(event, toState){
                 //_dom服务重置ele列表
                 _dom.reset();
 
-                var token = sessionStorage.getItem("token");
-
-                //token有效
-                if(token){
-                    if(toState.name =='login'){
+                //所有路由都要验证有效性
+                _aside.hasAuth(toState.name).then(function(auth){
+                    if(!auth){
                         event.preventDefault();
-                        $state.go("main");
-                    } else if(toState.name === "main"){
-                        //略过main 注：main不在验证路由有效性的范围
-                        return;
-                    } else {
-                        //除以上情况外，所有路由都要验证有效性
-                        _aside.hasAuth(toState.name).then(function(auth){
-                            if(!auth){
-                                event.preventDefault();
-                                $state.go("main");
-                            }
-                        });
+                        $state.go("profile");
                     }
-                }else{
-                    // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
-                    if(toState.name !='login' && toState.name !='register'){
-                        event.preventDefault();
-                        $state.go("login",{from:fromState.name,w:'notLogin'});
-                    }
-                }
-
+                });
             });
         }
     ]);

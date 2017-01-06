@@ -1,0 +1,12 @@
+{
+    "error": {
+        "returnCode": 0,
+        "returnMessage": "success",
+        "returnUserMessage": "success"
+    },
+    "data": {
+        "user_id": "zhouqf",
+        "user_name": "周庆峰",
+        "user_email": "zhouqf@jiedaibao.com"
+    }
+}

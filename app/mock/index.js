@@ -21,4 +21,7 @@ module.exports = function (mockDir) {
     conf.routing("/login",'login.json');//登录
     conf.routing("/logout",'logout.json');//退出登录
     conf.routing("/register",'register.json');//注册
+
+    conf.routing("/profile/get-menus",'get-menus.json');
+    conf.routing("/profile/get-profile",'get-profile.json');
 };

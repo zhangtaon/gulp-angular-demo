@@ -63,16 +63,22 @@
 
 "use strict";
 angular.module("app.directive")
-    .directive("aside", function () {
+    .directive("aside", ["_aside","_dom",function (_aside,_dom) {
         return{
             restrict: "A",
-            scope: {
-                option: "="
-            },
             replace: true,
-            templateUrl: '/src/directive/aside/aside.html'
+            templateUrl: '/src/directive/aside/aside.html',
+            controller: function($scope){
+                //侧边栏隐藏显示
+                $scope.spread = function(){
+                    _dom.get("main").toggleClass("spread");
+                };
+                _aside.data.then(function(res){
+                    $scope.datas = res.data.data;
+                })
+            }
         };
-    })
+    }])
     /**
      * 如果用户已经登录，根据用户角色获取侧边栏数据
      */
@@ -81,27 +87,14 @@ angular.module("app.directive")
         "$log",
         "$q",
         function ($http, $log, $q) {
-            var userinfo;
-            try {
-                userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-            } catch (e) {
-                $log.error("$log:", e);
-            }
-
-
             /**
              * 侧边栏数据对象
              */
             var aside = {
                 /**
-                 * 初始话菜单列表
-                 * @param role
+                 * 菜单列表存储对象
                  */
-                init: function(role){
-                    this.data = $http.get("role/" + role + ".json");
-                },
-                //菜单存储对象
-                data: null,
+                data: $http.get("/profile/get-menus"),
                 /**
                  * 验证是否有权限去访问菜单对应的页面
                  * @param stateName
@@ -135,9 +128,6 @@ angular.module("app.directive")
                     return hasAuth;
                 }
             };
-            if(userinfo){
-                aside.init(userinfo.role);
-            }
             return aside;
         }
     ])

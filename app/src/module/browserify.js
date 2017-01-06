@@ -7,3 +7,4 @@ angular.module("app.module", []);
 
 require("./about/about");
 require("./test/test");
+require("./profile/profile");

@@ -9,7 +9,7 @@ angular.module("app.module")
         "$locationProvider",
         "$urlRouterProvider",function ($stateProvider, $locationProvider) {
             $stateProvider
-                .state('main.test', {
+                .state('test', {
                     url: "/test",
                     controller: 'testCtrl',
                     templateUrl: '/src/module/test/test.html'
@@ -29,6 +29,5 @@ angular.module("app.module")
         }, function (res) {
             console.log("post:", res);
         });
-        console.log("dddk");
     }]
 );

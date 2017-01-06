@@ -4,7 +4,7 @@ require("../src/service/interceptor");
 require("../src/serviceModule/browserify");
 require("../src/directive/browserify");
 require("../src/module/browserify");
-},{"../src/app":2,"../src/directive/browserify":5,"../src/module/browserify":8,"../src/service/interceptor":16,"../src/serviceModule/browserify":10}],2:[function(require,module,exports){
+},{"../src/app":2,"../src/directive/browserify":5,"../src/module/browserify":8,"../src/service/interceptor":14,"../src/serviceModule/browserify":11}],2:[function(require,module,exports){
 "use strict";
 
 /**
@@ -33,38 +33,17 @@ angular.module("app", [
         "_dom",
         function($rootScope,$state,_aside,_dom){
 
-            $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState){
-                
+            $rootScope.$on('$stateChangeStart',function(event, toState){
                 //_dom服务重置ele列表
                 _dom.reset();
 
-                var token = sessionStorage.getItem("token");
-
-                //token有效
-                if(token){
-                    if(toState.name =='login'){
+                //所有路由都要验证有效性
+                _aside.hasAuth(toState.name).then(function(auth){
+                    if(!auth){
                         event.preventDefault();
-                        $state.go("main");
-                    } else if(toState.name === "main"){
-                        //略过main 注：main不在验证路由有效性的范围
-                        return;
-                    } else {
-                        //除以上情况外，所有路由都要验证有效性
-                        _aside.hasAuth(toState.name).then(function(auth){
-                            if(!auth){
-                                event.preventDefault();
-                                $state.go("main");
-                            }
-                        });
+                        $state.go("profile");
                     }
-                }else{
-                    // token无效 如果访问内部页就返回到登录页(注：此处要过滤掉所有的外部url及未登录的url)
-                    if(toState.name !='login' && toState.name !='register'){
-                        event.preventDefault();
-                        $state.go("login",{from:fromState.name,w:'notLogin'});
-                    }
-                }
-
+                });
             });
         }
     ]);
@@ -180,16 +159,22 @@ angular.module("app.directive")
 
 "use strict";
 angular.module("app.directive")
-    .directive("aside", function () {
+    .directive("aside", ["_aside","_dom",function (_aside,_dom) {
         return{
             restrict: "A",
-            scope: {
-                option: "="
-            },
             replace: true,
-            templateUrl: '/src/directive/aside/aside.html'
+            templateUrl: '/src/directive/aside/aside.html',
+            controller: function($scope){
+                //侧边栏隐藏显示
+                $scope.spread = function(){
+                    _dom.get("main").toggleClass("spread");
+                };
+                _aside.data.then(function(res){
+                    $scope.datas = res.data.data;
+                })
+            }
         };
-    })
+    }])
     /**
      * 如果用户已经登录，根据用户角色获取侧边栏数据
      */
@@ -198,27 +183,14 @@ angular.module("app.directive")
         "$log",
         "$q",
         function ($http, $log, $q) {
-            var userinfo;
-            try {
-                userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-            } catch (e) {
-                $log.error("$log:", e);
-            }
-
-
             /**
              * 侧边栏数据对象
              */
             var aside = {
                 /**
-                 * 初始话菜单列表
-                 * @param role
+                 * 菜单列表存储对象
                  */
-                init: function(role){
-                    this.data = $http.get("role/" + role + ".json");
-                },
-                //菜单存储对象
-                data: null,
+                data: $http.get("/profile/get-menus"),
                 /**
                  * 验证是否有权限去访问菜单对应的页面
                  * @param stateName
@@ -252,9 +224,6 @@ angular.module("app.directive")
                     return hasAuth;
                 }
             };
-            if(userinfo){
-                aside.init(userinfo.role);
-            }
             return aside;
         }
     ])
@@ -274,7 +243,7 @@ angular.module("app.directive", [
 require("./aside/aside");
 require("./dom/dom");
 require("./alert/alert");
-
+//require("./model/model");
 },{"./alert/alert":3,"./aside/aside":4,"./dom/dom":6}],6:[function(require,module,exports){
 /**
  * dom指令
@@ -372,7 +341,7 @@ angular.module("app.module")
         "$locationProvider",
         "$urlRouterProvider",function ($stateProvider, $locationProvider) {
             $stateProvider
-                .state('main.about', {
+                .state('about', {
                     url: "/about",
                     controller: 'aboutCtrl',
                     templateUrl: '/src/module/about/about.html'
@@ -408,7 +377,50 @@ angular.module("app.module", []);
 
 require("./about/about");
 require("./test/test");
-},{"./about/about":7,"./test/test":9}],9:[function(require,module,exports){
+require("./profile/profile");
+},{"./about/about":7,"./profile/profile":9,"./test/test":10}],9:[function(require,module,exports){
+"use strict";
+
+/**
+ * Created by zto on 2016/10/20.
+ */
+angular.module("app.module")
+    .config([
+        "$stateProvider",
+        "$locationProvider",
+        "$urlRouterProvider",
+        function ($stateProvider, $locationProvider) {
+            $stateProvider
+                .state('profile', {
+                    url: "/profile",
+                    controller: 'profileCtrl',
+                    templateUrl: '/src/module/profile/profile.html',
+                    resolve: {
+                        user: ["_profile",function(_profile){
+                            return _profile.getProfile();
+                        }]
+                    }
+                });
+
+            // Without server side support html5 must be disabled.
+            $locationProvider.html5Mode(false);
+        }
+    ])
+    .controller("profileCtrl", ["$rootScope","$scope","user","_alert",function ($rootScope,$scope,user) {
+        $scope.user = user.data.data;
+        sessionStorage.setItem("userinfo", JSON.stringify(user.data.data));
+    }])
+    .factory("_profile",["$http",function($http){
+            return {
+                getProfile: function(){
+                    return $http.get("/profile/get-profile");
+                }
+            };
+        }]
+    )
+;
+
+},{}],10:[function(require,module,exports){
 "use strict";
 
 /**
@@ -420,7 +432,7 @@ angular.module("app.module")
         "$locationProvider",
         "$urlRouterProvider",function ($stateProvider, $locationProvider) {
             $stateProvider
-                .state('main.test', {
+                .state('test', {
                     url: "/test",
                     controller: 'testCtrl',
                     templateUrl: '/src/module/test/test.html'
@@ -440,11 +452,10 @@ angular.module("app.module")
         }, function (res) {
             console.log("post:", res);
         });
-        console.log("dddk");
     }]
 );
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 /**
  * 非业务功能模块
@@ -456,26 +467,10 @@ angular.module("app.serviceModule", []);
  * 非业务功能模块
  * Created by zto on 2016/11/25.
  */
-require("./main/main");
-require("./login/login");
-require("./register/register");
 require("./header/header");
-require("./footer/footer");
-},{"./footer/footer":11,"./header/header":12,"./login/login":13,"./main/main":14,"./register/register":15}],11:[function(require,module,exports){
-'use strict';
+require("./login/login");
 
-angular.module('app.serviceModule')
-
-.controller('FooterCtrl', [
-        '$scope',
-        function($scope) {
-            $scope.$on('login', function() {
-                $scope.logined = true;
-            });
-        }]
-    );
-
-},{}],12:[function(require,module,exports){
+},{"./header/header":12,"./login/login":13}],12:[function(require,module,exports){
 'use strict';
 
 angular.module('app.serviceModule')
@@ -491,10 +486,6 @@ angular.module('app.serviceModule')
                   $scope.userinfo = null;
               });
             };
-
-            $scope.$on('login', function() {
-                $scope.userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-            });
         }]
     );
 
@@ -620,97 +611,6 @@ angular.module("app.serviceModule")
 "use strict";
 
 /**
- * 业务框架模块
- * 左：菜单
- * 右：页面内容
- * Created by zto on 2016/10/20.
- */
-angular.module("app.serviceModule")
-    .config([
-        "$stateProvider",
-        function ($stateProvider) {
-            $stateProvider
-                .state('main', {
-                    url: "/main",
-                    controller: 'mainCtrl',
-                    templateUrl: '/src/serviceModule/main/main.html',
-                    resolve: {
-                        menus: ["_aside",function(_aside){
-                            return _aside.data;
-                        }]
-                    }
-                });
-        }
-    ])
-    .controller("mainCtrl", [
-        "$scope",
-        "$http",
-        "menus",
-        "_dom",
-        function ($scope,$http,menus,_dom) {
-            //初始化侧边栏
-            $scope.asideOption = {
-                //侧边栏所需数据
-                datas: menus.data.data,
-                //侧边栏隐藏显示
-                spread: function(){
-                    _dom.get("main").toggleClass("spread");
-                }
-            };
-        }
-    ])
-;
-
-},{}],15:[function(require,module,exports){
-"use strict";
-
-/**
- * 注册模块
- * Created by zto on 2016/12/2.
- */
-angular.module("app.serviceModule")
-    .config([
-        "$stateProvider",
-        "$locationProvider",
-        "$urlRouterProvider",
-        function ($stateProvider) {
-            $stateProvider
-                .state('register', {
-                    url: "/register",
-                    controller: 'registerCtrl',
-                    templateUrl: '/src/serviceModule/register/register.html'
-                });
-        }
-    ])
-    .controller("registerCtrl", [
-        "$scope",
-        "$rootScope",
-        "_registerService",
-        function ($scope, $rootScope, _registerService) {
-            $scope.register = function (valid) {
-                $scope.submitted = true;
-                valid && _registerService.register($scope.registerModel);// jshint ignore:line
-            };
-        }
-    ])
-    .factory("_registerService",[
-        "$http",
-        function($http){
-            return {
-                register: function(data){
-                    $http.post("/register",data).then(function (res) {
-                        if(res.data.error.returnCode == 200){
-                            console.log("ok res:",res.data.error.returnMessage);
-                        }
-                    });
-                }
-            };
-        }])
-;
-},{}],16:[function(require,module,exports){
-"use strict";
-
-/**
  * http拦截器
  * 注：封装登录token
  * Created by zto on 2016/10/20.
@@ -724,37 +624,37 @@ angular.module("app")
         function ($q,$rootScope,$log,$location) {
             return {
                 request: function (config) {
-//                    X-Requested-With:XMLHttpRequest
-                    config.headers.token = sessionStorage.getItem("token");
+                    config.headers["X-Requested-With"] = "XMLHttpRequest";
                     return config;
                 },
                 response: function (resp) {
-                    if (resp.config.url == '/login' && resp.data.error.returnCode==200) {
+                   /* if (resp.config.url == '/login' && resp.data.error.returnCode==200) {
                         sessionStorage.setItem("token", resp.config.headers.token || resp.data.token);
-                    }
+                    }*/
                     return resp;
                 },
                 responseError: function (rejection) {
                     //错误处理
                     switch (rejection.status) {
                         case 401:
-                            if (rejection.config.url !== '/login') {
-                                sessionStorage.setItem("token", null);
-                                sessionStorage.setItem("userinfo", null);
-                                $log.log("auth:loginRequired");
-                            }
-                            $location.url("/login");
+                            sessionStorage.setItem("token", null);
+                            sessionStorage.setItem("userinfo", null);
+                            $log.log("auth:loginRequired");
                             break;
                         case 403:
                             $log.warn("auth:forbidden");
+                            _alert.show("接口被屏蔽");
                             break;
                         case 404:
                             $log.warn("url:notFound");
+                            _alert.show("请求的接口不存在");
                             break;
                         case 405:
+                            _alert.show("接口不允许访问");
                             $log.warn("method:notAllowed");
                             break;
                         case 500:
+                            _alert.show("服务器错误");
                             $log.error("server:error");
                             break;
                     }

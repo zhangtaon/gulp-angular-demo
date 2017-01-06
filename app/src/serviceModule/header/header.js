@@ -13,9 +13,5 @@ angular.module('app.serviceModule')
                   $scope.userinfo = null;
               });
             };
-
-            $scope.$on('login', function() {
-                $scope.userinfo = JSON.parse(sessionStorage.getItem("userinfo"));
-            });
         }]
     );

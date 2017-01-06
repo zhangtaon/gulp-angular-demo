@@ -9,7 +9,7 @@ angular.module("app.module")
         "$locationProvider",
         "$urlRouterProvider",function ($stateProvider, $locationProvider) {
             $stateProvider
-                .state('main.about', {
+                .state('about', {
                     url: "/about",
                     controller: 'aboutCtrl',
                     templateUrl: '/src/module/about/about.html'

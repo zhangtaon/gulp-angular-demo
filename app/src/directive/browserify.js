@@ -12,3 +12,4 @@ angular.module("app.directive", [
 require("./aside/aside");
 require("./dom/dom");
 require("./alert/alert");
+//require("./model/model");

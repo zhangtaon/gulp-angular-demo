@@ -31,7 +31,10 @@
 </p>
 <![endif]-->
 <div ng-include="'src/serviceModule/header/header.html'"></div>
-<div class="content" ui-view></div>
+<div class="content">
+    <div aside></div>
+    <div dom dom-key="main" class="main" ui-view></div>
+</div>
 <div ng-include="'src/serviceModule/footer/footer.html'"></div>
 <span alert></span>
 </body>
