@@ -43,7 +43,7 @@ angular.module("app", [
                         return;
                     } else {
                         //除以上情况外，所有路由都要验证有效性
-                        _aside.hasRole(toState.name).then(function(auth){
+                        _aside.hasAuth(toState.name).then(function(auth){
                             if(!auth){
                                 event.preventDefault();
                                 $state.go("main");

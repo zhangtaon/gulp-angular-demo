@@ -50,7 +50,7 @@ angular.module("app", [
                         return;
                     } else {
                         //除以上情况外，所有路由都要验证有效性
-                        _aside.hasRole(toState.name).then(function(auth){
+                        _aside.hasAuth(toState.name).then(function(auth){
                             if(!auth){
                                 event.preventDefault();
                                 $state.go("main");
@@ -117,31 +117,61 @@ angular.module("app.directive")
 },{}],4:[function(require,module,exports){
 /**
  * 侧边栏指令
- * option为指定的配置参数,他的值为绑定在所在模块控制器作用域上的属性
-   option：{
-        datas：
-        [
-            {
-                href:"Home",
-                title:"Home",
-                items: [
-                    {href:"test1",title:"test1"},
-                    {href:"test2",title:"test2"}
-                ]
-            },
-            {
-                href:"Projects",
-                title:"Projects",
-                items: [
+ *
+ * 所需数据结构
+ "data": [
+     {
+          "id":"0",
+          "name":"用户信息",
+          "url":"profile"
+      },
+     {
+         "id":"1",
+         "name":"工单管理",
+         "url":"/ticket/index"
+     },
+     {
+         "id": "2",
+         "name": "用户映射",
+         "url": "/ticket/index",
+         "children": [
+             {
+                 "id":"3",
+                 "name":"test二级菜单",
+                 "url":"/ticket/test",
+                 "children": [
+                     {
+                         "id":"4",
+                         "name":"三级菜单1",
+                         "url":"profile1"
+                     },
+                     {
+                         "id":"5",
+                         "name":"三级菜单2",
+                         "url":"/ticket/index1",
+                         "children": [
+                             {
+                                 "id":"4",
+                                 "name":"四级菜单1",
+                                 "url":"profile1"
+                             },
+                             {
+                                 "id":"5",
+                                 "name":"四级菜单2",
+                                 "url":"/ticket/index1"
+                             }
+                         ]
+                     }
+                 ]
+             }
+         ]
+     }
+ ]
 
-                ]
-            }
-        ],
-        注：隐藏侧边栏
-        spread: function(){
+ 注：隐藏侧边栏
+ spread: function(){
 
-        }
-    }
+ }
 
  * _aside服务应用于多个依赖（app、main）
  *
@@ -180,36 +210,46 @@ angular.module("app.directive")
              * 侧边栏数据对象
              */
             var aside = {
-                //初始话菜单列表
+                /**
+                 * 初始话菜单列表
+                 * @param role
+                 */
                 init: function(role){
                     this.data = $http.get("role/" + role + ".json");
                 },
                 //菜单存储对象
                 data: null,
-                //验证是否有权限去访问菜单对应的页面
-                hasRole: function(stateName){
-                    var defer = $q.defer(),hasAuth;
-                    if(this.data){
-                        this.data.then(function(res){
-                            for(var i= 0,item;(item = res.data.datas[i]);i++){
-                                if(stateName === item.ref){
-                                    hasAuth = true;
-                                    break;
-                                }
-                                for(var j= 0,_item;(_item = item.items[j]);j++){
-                                    if(stateName === _item.ref){
-                                        hasAuth = true;
-                                        break;
-                                    }
-                                }
-                                if(hasAuth){
-                                    break;
-                                }
-                            }
-                            defer.resolve(hasAuth);
-                        });
-                    }
+                /**
+                 * 验证是否有权限去访问菜单对应的页面
+                 * @param stateName
+                 * @returns {*}
+                 */
+                hasAuth: function(stateName){
+                    var defer = $q.defer(),_this = this;
+                    _this.data.then(function(res){
+                        defer.resolve(_this.validState(res.data.data,stateName));
+                    });
                     return defer.promise;
+                },
+                /**
+                 * 验证路由的有效性
+                 * @param arr
+                 * @param stateName
+                 * @returns {*}
+                 */
+                validState: function(arr,stateName){
+                    var hasAuth;
+
+                    for(var i= 0,item;(item = arr[i]);i++){
+                        if(stateName.indexOf(item.url)>-1){
+                            hasAuth = true;
+                            break;
+                        }
+                        if(item.children && (hasAuth = this.validState(item,stateName))){
+                            break;
+                        }
+                    }
+                    return hasAuth;
                 }
             };
             if(userinfo){
@@ -593,7 +633,7 @@ angular.module("app.serviceModule")
                 .state('main', {
                     url: "/main",
                     controller: 'mainCtrl',
-                    templateUrl: 'src/serviceModule/main/main.html',
+                    templateUrl: '/src/serviceModule/main/main.html',
                     resolve: {
                         menus: ["_aside",function(_aside){
                             return _aside.data;
@@ -611,7 +651,7 @@ angular.module("app.serviceModule")
             //初始化侧边栏
             $scope.asideOption = {
                 //侧边栏所需数据
-                datas: menus.data.datas,
+                datas: menus.data.data,
                 //侧边栏隐藏显示
                 spread: function(){
                     _dom.get("main").toggleClass("spread");

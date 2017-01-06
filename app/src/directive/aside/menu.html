@@ -1,0 +1,5 @@
+<a ng-if="menu.url" ui-sref="{{menu.url}}">{{menu.name}}</a>
+<a ng-if="!menu.url">{{menu.title}}</a>
+<ul>
+    <li ui-sref-active="active" ng-repeat="menu in menu.children" ng-include="'/src/directive/aside/menu.html'"></li>
+</ul>

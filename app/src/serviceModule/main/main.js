@@ -14,7 +14,7 @@ angular.module("app.serviceModule")
                 .state('main', {
                     url: "/main",
                     controller: 'mainCtrl',
-                    templateUrl: 'src/serviceModule/main/main.html',
+                    templateUrl: '/src/serviceModule/main/main.html',
                     resolve: {
                         menus: ["_aside",function(_aside){
                             return _aside.data;
@@ -32,7 +32,7 @@ angular.module("app.serviceModule")
             //初始化侧边栏
             $scope.asideOption = {
                 //侧边栏所需数据
-                datas: menus.data.datas,
+                datas: menus.data.data,
                 //侧边栏隐藏显示
                 spread: function(){
                     _dom.get("main").toggleClass("spread");

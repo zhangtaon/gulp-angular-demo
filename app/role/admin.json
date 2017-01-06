@@ -1,24 +1,24 @@
 {
-    "datas": [
+    "data": [
         {
-            "ref":"",
-            "title":"test",
-            "items": [
+            "url":"",
+            "name":"test",
+            "children": [
                 {
-                    "ref":"main.test",
-                    "title":"test1"
+                    "url":"main.test",
+                    "name":"test1"
                 }
             ]
         },
         {
-            "ref":"main.rbac",
-            "title":"统一权限管理",
-            "items": []
+            "url":"main.rbac",
+            "name":"统一权限管理",
+            "children": []
         },
         {
-            "ref":"main.about",
-            "title":"About",
-            "items": []
+            "url":"main.about",
+            "name":"About",
+            "children": []
         }
     ]
 }
