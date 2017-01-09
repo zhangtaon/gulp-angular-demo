@@ -68,15 +68,15 @@ angular.module("app.directive")
             restrict: "A",
             replace: true,
             templateUrl: '/src/directive/aside/aside.html',
-            controller: function($scope){
+            controller: ["$scope",function($scope){
                 //侧边栏隐藏显示
                 $scope.spread = function(){
                     _dom.get("main").toggleClass("spread");
                 };
                 _aside.data.then(function(res){
                     $scope.datas = res.data.data;
-                })
-            }
+                });
+            }]
         };
     }])
     /**

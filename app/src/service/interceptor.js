@@ -11,7 +11,8 @@ angular.module("app")
         "$rootScope",
         "$log",
         "$location",
-        function ($q,$rootScope,$log,$location) {
+        "_alert",
+        function ($q,$rootScope,$log,_alert) {
             return {
                 request: function (config) {
                     config.headers["X-Requested-With"] = "XMLHttpRequest";
